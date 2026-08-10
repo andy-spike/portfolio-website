@@ -1,0 +1,36 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+import { CONTACT } from '../lib/contact';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<div class="w-full max-w-[16rem] border border-rule bg-ground lg:max-w-none">
+  <div class="flex items-center justify-between border-b border-rule px-2.5 py-1.5">
+    <span class="rail">andrés</span>
+    <span class="rail text-ink-faint">{t('portrait.label')}</span>
+  </div>
+
+  {
+    CONTACT.portraitIsPlaceholder ? (
+      /* Reserved position. Drop the headshot at public/portrait.jpg and set
+         CONTACT.portraitIsPlaceholder to false — it sets in place of this plate. */
+      <div class="flex aspect-[4/3] w-full flex-col items-center justify-center gap-4 px-6 text-center">
+        <span class="measure w-16" />
+        <span class="rail rail-strong">{t('portrait.placeholder')}</span>
+      </div>
+    ) : (
+      <img
+        src={CONTACT.portrait}
+        alt={CONTACT.name}
+        width="480"
+        height="640"
+        class="aspect-[4/3] w-full object-cover"
+      />
+    )
+  }
+</div>

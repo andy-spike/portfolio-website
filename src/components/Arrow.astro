@@ -1,0 +1,29 @@
+---
+interface Props {
+  /** "right" for navigation, "out" for links that leave the site, "down" for downloads */
+  dir?: 'right' | 'out' | 'down';
+  class?: string;
+}
+const { dir = 'right', class: className = '' } = Astro.props;
+
+const paths: Record<string, string> = {
+  right: 'M1 7h12M8.5 2.5 13 7l-4.5 4.5',
+  out: 'M4 10 10.5 3.5M5 3.5h5.5V9',
+  down: 'M7 1v11M2.5 7.5 7 12l4.5-4.5',
+};
+---
+
+<svg
+  class={className}
+  width="14"
+  height="14"
+  viewBox="0 0 14 14"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.25"
+  stroke-linecap="square"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={paths[dir]} />
+</svg>

@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sheet from '../../components/Sheet.astro';
+import { getSpecimens } from '../../lib/specimens';
+
+export async function getStaticPaths() {
+  const specimens = await getSpecimens('en');
+  return specimens.map(({ slug, entry, isFallback }) => ({
+    params: { slug },
+    props: { entry, isFallback },
+  }));
+}
+
+const { entry, isFallback } = Astro.props;
+const { slug } = Astro.params;
+---
+
+<Base
+  locale="en"
+  path={`/work/${slug}`}
+  trim
+  title={`${entry.data.title} — Andrés Sanabria`}
+  description={entry.data.character}
+>
+  <Sheet locale="en" entry={entry} isFallback={isFallback} />
+</Base>

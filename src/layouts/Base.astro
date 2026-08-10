@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+import Rail from '../components/Rail.astro';
+import Colophon from '../components/Colophon.astro';
+import { useTranslations, localePath, showingText, type Locale } from '../i18n/ui';
+import { CONTACT } from '../lib/contact';
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  /** Root-relative path of this page without locale prefix, e.g. "/" or "/work/dolphin" */
+  path: string;
+  /** A single sheet reads at a tighter trim than the index. */
+  trim?: boolean;
+}
+
+const { locale, title, description, path, trim = false } = Astro.props;
+const t = useTranslations(locale);
+
+const pageTitle = title ?? t('meta.title');
+const pageDescription = description ?? t('meta.description');
+const canonical = new URL(localePath(locale, path), Astro.site);
+
+/**
+ * The social card is the sheet's first viewport at another magnification.
+ * Regenerate both files from scripts/og-card.html whenever the showing changes.
+ */
+const ogImage = new URL(`/og-${locale}.png`, Astro.site);
+const ogLocales: Record<Locale, string> = { en: 'en_US', es: 'es_CO' };
+const otherLocale: Locale = locale === 'en' ? 'es' : 'en';
+---
+
+<html lang={locale} data-path={path}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="alternate" hreflang="en" href={new URL(localePath('en', path), Astro.site).href} />
+    <link rel="alternate" hreflang="es" href={new URL(localePath('es', path), Astro.site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(localePath('en', path), Astro.site).href} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={CONTACT.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:locale" content={ogLocales[locale]} />
+    <meta property="og:locale:alternate" content={ogLocales[otherLocale]} />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1260" />
+    <meta property="og:image:alt" content={showingText(locale)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage.href} />
+    <meta name="twitter:image:alt" content={showingText(locale)} />
+
+    <script is:inline>
+      // Dark is the default plate; a stored choice or a system light preference wins.
+      (function () {
+        try {
+          var stored = localStorage.getItem('plate');
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.setAttribute('data-theme', stored);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+
+  <body><!--
+THESIS: Every project is a specimen — one object shown at three magnifications, measured and annotated. Refuses the project-card grid where each project gets the same 60 words and none is examined.
+OWN-WORLD: The reversed specimen plate. Ink ground #111110 against paper #f2f1ee; one vermilion, spent only on things the reader can act on. Archivo Variable — its width axis is the page's motion — with Martian Mono for measurement. Hairline rules with tick ends, tabular figures, struck alternates. Shadcn (base-sera style) supplies Button and Lucide icons, retokened onto this palette rather than its own.
+STORY: A hiring manager reads a claim answered by three verifiable facts, opens one sheet, sees the alternatives that were rejected, and writes.
+FIRST VIEWPORT: Metadata rail. The positioning line set enormous. Beneath it a key of three verifiable facts, then a measure rule and the first specimen entry.
+FORM: Type specimen sheet; candidate 7 of 7 on the grounded list; seed key f2350afb.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+-->
+    <a href="#content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-3 focus:bg-plate focus:px-4 focus:py-2 focus:text-ink">
+      {t('nav.skipToContent')}
+    </a>
+
+    <Rail locale={locale} path={path} trim={trim} />
+
+    <main id="content" class="flex-1 pt-[var(--rail-h)]">
+      <slot />
+    </main>
+
+    <Colophon locale={locale} trim={trim} />
+
+  </body>
+</html>

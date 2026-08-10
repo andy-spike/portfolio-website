@@ -1,0 +1,25 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+import ContactBar from './ContactBar.astro';
+
+interface Props {
+  locale: Locale;
+  /** Match the tighter trim a single sheet uses, so the edges line up. */
+  trim?: boolean;
+}
+const { locale, trim = false } = Astro.props;
+const t = useTranslations(locale);
+
+---
+
+<footer class="border-t border-rule bg-plate">
+  <div class:list={["sheet", trim && "sheet-trim", "py-16 sm:py-24"]}>
+    <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-16">
+      <p class="max-w-[26ch] text-[clamp(1.5rem,3.5vw,2.25rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
+        {t('availability')}
+      </p>
+
+      <ContactBar locale={locale} />
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,46 @@
+---
+import { useTranslations, showingLine, type Locale } from '../i18n/ui';
+import ContactBar from './ContactBar.astro';
+import Portrait from './Portrait.astro';
+import { ArrowDown } from 'lucide-react';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const line = showingLine[locale];
+---
+
+<section class="sheet relative grid min-h-[calc(100svh-var(--rail-h))] items-center gap-x-12 gap-y-10 pb-[clamp(2.5rem,6vw,4rem)] pt-[clamp(2.75rem,8vw,6rem)] lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+  <div class="min-w-0 lg:-translate-y-8">
+    <h1 class="showing text-ink">
+      {
+        line.map((run) =>
+          run.emphasis ? <span class="showing-mark">{run.text}</span> : run.text
+        )
+      }
+    </h1>
+
+    <p class="mt-[clamp(1.75rem,4vw,3rem)] max-w-[42ch] text-lead text-ink-muted">
+      {t('hero.description')}
+    </p>
+
+    <div class="mt-[clamp(2rem,5vw,3.5rem)]">
+      <ContactBar locale={locale} />
+    </div>
+  </div>
+
+  <div class="self-center lg:-translate-y-8">
+    <Portrait locale={locale} />
+  </div>
+
+  <!-- The cue rides over the sheet, so it only sets where the two-column
+       hero leaves room for it. Below that the fold speaks for itself. -->
+  <div class="absolute inset-x-0 bottom-5 hidden justify-center lg:flex">
+    <a href="#projects" aria-label={t('nav.projects')} class="cue text-accent-ink hover:text-ink">
+      <ArrowDown size={40} strokeWidth={1.25} className="cue-mark size-10" aria-hidden="true" />
+    </a>
+  </div>
+</section>

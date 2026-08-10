@@ -1,0 +1,177 @@
+<!doctype html>
+<!--
+  Source of truth for public/og-en.png and public/og-es.png.
+
+  These are the sheet's first viewport at another magnification, so they are
+  generated from the same words rather than drawn by hand. To regenerate:
+  open this file, set the viewport to exactly 1200x630, add ?locale=es for the
+  Spanish card, and screenshot. Re-run it whenever the showing line changes —
+  a stale card is a wrong claim.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Social card</title>
+    <style>
+      @font-face {
+        font-family: "Archivo Variable";
+        src: url("../node_modules/@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2")
+          format("woff2-variations");
+        font-weight: 100 900;
+        font-stretch: 62% 125%;
+        font-display: block;
+      }
+
+      @font-face {
+        font-family: "Martian Mono Variable";
+        src: url("../node_modules/@fontsource-variable/martian-mono/files/martian-mono-latin-wdth-normal.woff2")
+          format("woff2-variations");
+        font-weight: 100 800;
+        font-stretch: 75% 112.5%;
+        font-display: block;
+      }
+
+      /* The reversed plate, matching the tokens in src/styles/global.css. */
+      :root {
+        --ground: #111110;
+        --rule: #2c2c28;
+        --rule-strong: #4a4a43;
+        --ink: #f2f0e9;
+        --ink-muted: #9d9a90;
+        --ink-faint: #85827a;
+        --accent-ink: #78c995;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        background: var(--ground);
+        color: var(--ink);
+        font-family: "Archivo Variable", sans-serif;
+        font-synthesis-weight: none;
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 64px 72px;
+        overflow: hidden;
+      }
+
+      .rail {
+        font-family: "Martian Mono Variable", monospace;
+        font-size: 15px;
+        font-variation-settings: "wdth" 87.5, "wght" 400;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .rail .sep {
+        width: 1px;
+        height: 12px;
+        background: var(--rule-strong);
+      }
+
+      .rail .name { color: var(--ink); }
+
+      .showing {
+        font-size: 92px;
+        line-height: 0.98;
+        letter-spacing: -0.04em;
+        font-weight: 600;
+        font-variation-settings: "wdth" 105;
+        text-wrap: balance;
+      }
+
+      /* The sheet's own emphasis: the one word the claim turns on. */
+      .showing .mark {
+        color: var(--accent-ink);
+      }
+
+      .foot { display: flex; flex-direction: column; gap: 22px; }
+
+      .measure {
+        position: relative;
+        border-top: 1px solid var(--rule-strong);
+        height: 1px;
+      }
+
+      .measure::before,
+      .measure::after {
+        content: "";
+        position: absolute;
+        top: -4px;
+        width: 1px;
+        height: 9px;
+        background: var(--rule-strong);
+      }
+
+      .measure::before { left: 0; }
+      .measure::after { right: 0; }
+
+      .specimens {
+        font-family: "Martian Mono Variable", monospace;
+        font-size: 15px;
+        font-variation-settings: "wdth" 87.5, "wght" 500;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--ink);
+        display: flex;
+        gap: 28px;
+      }
+
+      .specimens .num {
+        color: var(--ink-faint);
+        margin-inline-end: 8px;
+        font-variation-settings: "wdth" 87.5, "wght" 400;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="rail">
+      <span class="name">Andrés Sanabria</span>
+      <span class="sep"></span>
+      <span data-slot="specimen">Specimen No. 01</span>
+      <span class="sep"></span>
+      <span>Bogotá · UTC−5</span>
+    </div>
+
+    <h1 class="showing" data-slot="showing"></h1>
+
+    <div class="foot">
+      <div class="measure"></div>
+      <div class="specimens">
+        <span><span class="num">01</span>Dolphin</span>
+        <span><span class="num">02</span>Armin</span>
+        <span><span class="num">03</span>Citadela</span>
+      </div>
+    </div>
+
+    <script>
+      // The same text as showingText(locale) in src/i18n/ui.ts. Kept literal so
+      // this file stays openable on its own, with no build step.
+      // The same runs as showingLine(locale) in src/i18n/ui.ts, with the same
+      // word marked. Kept literal so this file stays openable on its own,
+      // with no build step.
+      const LINES = {
+        en: ["I build products with ", "agents", " inside them."],
+        es: ["Construyo productos con ", "agentes", " por dentro."],
+      };
+
+      const SPECIMEN_RAIL = { en: "Specimen No. 01", es: "Muestrario N.º 01" };
+
+      const locale = new URLSearchParams(location.search).get("locale") === "es" ? "es" : "en";
+      document.documentElement.lang = locale;
+      document.querySelector('[data-slot="specimen"]').textContent = SPECIMEN_RAIL[locale];
+      const [head, mark, tail] = LINES[locale];
+      const showing = document.querySelector('[data-slot="showing"]');
+      showing.append(head, Object.assign(document.createElement("span"), { className: "mark", textContent: mark }), tail);
+    </script>
+  </body>
+</html>

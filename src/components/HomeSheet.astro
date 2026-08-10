@@ -1,0 +1,17 @@
+---
+import Showing from './Showing.astro';
+import SpecimenTable from './SpecimenTable.astro';
+import InUse from './InUse.astro';
+import About from './About.astro';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<Showing locale={locale} />
+<SpecimenTable locale={locale} />
+<InUse locale={locale} />
+<About locale={locale} />

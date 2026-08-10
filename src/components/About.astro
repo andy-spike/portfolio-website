@@ -1,0 +1,22 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section id="about" aria-labelledby="about-heading" class="scroll-mt-[var(--rail-h)] border-t border-rule">
+  <div class="sheet py-16 sm:py-24">
+    <SectionHead id="about-heading" heading={t('about.heading')} />
+
+    <div class="mt-10 max-w-[62ch] space-y-5 text-lead leading-[1.55] text-ink sm:mt-14">
+      <p>{t('about.intro')}</p>
+      <p>{t('about.focus')}</p>
+      <p>{t('about.work')}</p>
+    </div>
+  </div>
+</section>
