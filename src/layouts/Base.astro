@@ -1,9 +1,15 @@
 ---
-import '../styles/global.css';
-import Rail from '../components/Rail.astro';
-import Colophon from '../components/Colophon.astro';
-import { useTranslations, localePath, showingText, type Locale } from '../i18n/ui';
-import { CONTACT } from '../lib/contact';
+import "../styles/global.css";
+import Rail from "../components/Rail.astro";
+import Colophon from "../components/Colophon.astro";
+import {
+  useTranslations,
+  localePath,
+  showingText,
+  type Locale,
+} from "../i18n/ui";
+import { CONTACT } from "../lib/contact";
+import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   locale: Locale;
@@ -18,8 +24,8 @@ interface Props {
 const { locale, title, description, path, trim = false } = Astro.props;
 const t = useTranslations(locale);
 
-const pageTitle = title ?? t('meta.title');
-const pageDescription = description ?? t('meta.description');
+const pageTitle = title ?? t("meta.title");
+const pageDescription = description ?? t("meta.description");
 const canonical = new URL(localePath(locale, path), Astro.site);
 
 /**
@@ -27,8 +33,8 @@ const canonical = new URL(localePath(locale, path), Astro.site);
  * Regenerate both files from scripts/og-card.html whenever the showing changes.
  */
 const ogImage = new URL(`/og-${locale}.png`, Astro.site);
-const ogLocales: Record<Locale, string> = { en: 'en_US', es: 'es_CO' };
-const otherLocale: Locale = locale === 'en' ? 'es' : 'en';
+const ogLocales: Record<Locale, string> = { en: "en_US", es: "es_CO" };
+const otherLocale: Locale = locale === "en" ? "es" : "en";
 ---
 
 <html lang={locale} data-path={path}>
@@ -39,9 +45,21 @@ const otherLocale: Locale = locale === 'en' ? 'es' : 'en';
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical.href} />
-    <link rel="alternate" hreflang="en" href={new URL(localePath('en', path), Astro.site).href} />
-    <link rel="alternate" hreflang="es" href={new URL(localePath('es', path), Astro.site).href} />
-    <link rel="alternate" hreflang="x-default" href={new URL(localePath('en', path), Astro.site).href} />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href={new URL(localePath("en", path), Astro.site).href}
+    />
+    <link
+      rel="alternate"
+      hreflang="es"
+      href={new URL(localePath("es", path), Astro.site).href}
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(localePath("en", path), Astro.site).href}
+    />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={CONTACT.name} />
     <meta property="og:title" content={pageTitle} />
@@ -57,30 +75,34 @@ const otherLocale: Locale = locale === 'en' ? 'es' : 'en';
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage.href} />
     <meta name="twitter:image:alt" content={showingText(locale)} />
-
+    <Analytics />
     <script is:inline>
       // Dark is the default plate; a stored choice or a system light preference wins.
       (function () {
         try {
-          var stored = localStorage.getItem('plate');
-          if (stored === 'light' || stored === 'dark') {
-            document.documentElement.setAttribute('data-theme', stored);
+          var stored = localStorage.getItem("plate");
+          if (stored === "light" || stored === "dark") {
+            document.documentElement.setAttribute("data-theme", stored);
           }
         } catch (e) {}
       })();
     </script>
   </head>
 
-  <body><!--
-THESIS: Every project is a specimen — one object shown at three magnifications, measured and annotated. Refuses the project-card grid where each project gets the same 60 words and none is examined.
-OWN-WORLD: The reversed specimen plate. Ink ground #111110 against paper #f2f1ee; one vermilion, spent only on things the reader can act on. Archivo Variable — its width axis is the page's motion — with Martian Mono for measurement. Hairline rules with tick ends, tabular figures, struck alternates. Shadcn (base-sera style) supplies Button and Lucide icons, retokened onto this palette rather than its own.
+  <body
+    ><!--
+THESIS: Every project is one object shown at three magnifications, measured and annotated. Refuses the project-card grid where each project gets the same 60 words and none is examined.
+OWN-WORLD: The reversed plate. Ink ground #111110 against paper #f2f1ee; one vermilion, spent only on things the reader can act on. Archivo Variable — its width axis is the page's motion — with Martian Mono for measurement. Hairline rules with tick ends, tabular figures, struck alternates. Shadcn (base-sera style) supplies Button and Lucide icons, retokened onto this palette rather than its own.
 STORY: A hiring manager reads a claim answered by three verifiable facts, opens one sheet, sees the alternatives that were rejected, and writes.
-FIRST VIEWPORT: Metadata rail. The positioning line set enormous. Beneath it a key of three verifiable facts, then a measure rule and the first specimen entry.
-FORM: Type specimen sheet; candidate 7 of 7 on the grounded list; seed key f2350afb.
+FIRST VIEWPORT: Metadata rail. The positioning line set enormous. Beneath it a key of three verifiable facts, then a measure rule and the first project entry.
+FORM: Foundry sheet; candidate 7 of 7 on the grounded list; seed key f2350afb.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
 -->
-    <a href="#content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-3 focus:bg-plate focus:px-4 focus:py-2 focus:text-ink">
-      {t('nav.skipToContent')}
+    <a
+      href="#content"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-3 focus:bg-plate focus:px-4 focus:py-2 focus:text-ink"
+    >
+      {t("nav.skipToContent")}
     </a>
 
     <Rail locale={locale} path={path} trim={trim} />
@@ -90,6 +112,5 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     </main>
 
     <Colophon locale={locale} trim={trim} />
-
   </body>
 </html>

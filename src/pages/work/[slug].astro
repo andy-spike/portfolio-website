@@ -1,11 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Sheet from '../../components/Sheet.astro';
-import { getSpecimens } from '../../lib/specimens';
+import { getProjects } from '../../lib/projects';
 
 export async function getStaticPaths() {
-  const specimens = await getSpecimens('en');
-  return specimens.map(({ slug, entry, isFallback }) => ({
+  const projects = await getProjects('en');
+  return projects.map(({ slug, entry, isFallback }) => ({
     params: { slug },
     props: { entry, isFallback },
   }));

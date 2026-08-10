@@ -1,7 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { defaultLocale, type Locale } from '../i18n/ui';
 
-export type Specimen = CollectionEntry<'specimens'>;
+export type Project = CollectionEntry<'projects'>;
 
 /** Split "en/dolphin" into its locale and slug. */
 export function splitId(id: string): { locale: string; slug: string } {
@@ -13,12 +13,12 @@ export function splitId(id: string): { locale: string; slug: string } {
  * One entry per slug for the reader's language.
  * A slug set in the reader's language wins; otherwise the default-locale
  * setting stands in, so a missing translation degrades to English rather
- * than removing the specimen from the sheet.
+ * than removing the project from the sheet.
  */
-export async function getSpecimens(locale: Locale) {
-  const all = await getCollection('specimens', ({ data }) => !data.draft);
+export async function getProjects(locale: Locale) {
+  const all = await getCollection('projects', ({ data }) => !data.draft);
 
-  const bySlug = new Map<string, { entry: Specimen; locale: string }>();
+  const bySlug = new Map<string, { entry: Project; locale: string }>();
 
   for (const entry of all) {
     const { locale: entryLocale, slug } = splitId(entry.id);
@@ -45,7 +45,7 @@ export async function getSpecimens(locale: Locale) {
     .sort((a, b) => a.entry.data.order - b.entry.data.order);
 }
 
-export async function getSpecimen(locale: Locale, slug: string) {
-  const specimens = await getSpecimens(locale);
-  return specimens.find((s) => s.slug === slug);
+export async function getProject(locale: Locale, slug: string) {
+  const projects = await getProjects(locale);
+  return projects.find((s) => s.slug === slug);
 }

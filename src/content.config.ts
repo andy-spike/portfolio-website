@@ -3,16 +3,16 @@ import { glob } from 'astro/loaders';
 
 /**
  * One Case Study per Portfolio Project per language.
- * File layout: src/content/specimens/<locale>/<slug>.mdx
+ * File layout: src/content/projects/<locale>/<slug>.mdx
  * A missing Spanish file falls back to the English setting; it never 404s.
  */
-const specimens = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/specimens' }),
+const projects = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/projects' }),
   schema: z.object({
     title: z.string(),
     /** Position on the sheet. Flagship first. */
     order: z.number(),
-    /** One line: what this product is. Shown in the specimen table. */
+    /** One line: what this product is. Shown in the project table. */
     character: z.string(),
     /** What Andrés did on it. No seniority claims. */
     role: z.string(),
@@ -25,10 +25,10 @@ const specimens = defineCollection({
       live: z.string().url().optional(),
       download: z.string().url().optional(),
     }),
-    /** Set true only when a Terminal Cast exists for this specimen. */
+    /** Set true only when a Terminal Cast exists for this project. */
     cast: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });
 
-export const collections = { specimens };
+export const collections = { projects };

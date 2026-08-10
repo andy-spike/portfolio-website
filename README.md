@@ -5,8 +5,8 @@ usable products as evidence that he builds real software — and to convert a
 convinced reader into an email. It is not a blog, a résumé transcription, or a
 personal homepage.
 
-The site is a **type specimen sheet**: every Portfolio Project is a specimen —
-one object shown at several magnifications, measured, annotated, and set in use.
+The site is a **foundry sheet**: every Portfolio Project is one object shown at
+several magnifications, measured, annotated, and set in use.
 The alternates a foundry shows are exactly the Rejected Alternatives that carry
 each Case Study.
 
@@ -39,19 +39,19 @@ Problem → Decisions (with Rejected Alternatives) → Result:
 ├── public/                     # og-*.png, favicon, (reserved: resume, portrait, casts)
 ├── scripts/                    # og-card.html — OG image source
 ├── src/
-│   ├── components/             # HomeSheet, Sheet, SpecimenTable, Rail, etc.
+│   ├── components/             # HomeSheet, Sheet, ProjectTable, Rail, etc.
 │   │   └── ui/                 # shadcn primitives (button, dropdown-menu)
 │   ├── content/
-│   │   └── specimens/<locale>/<slug>.mdx   # case studies, per language
+│   │   └── projects/<locale>/<slug>.mdx   # case studies, per language
 │   ├── i18n/ui.ts              # all UI copy in both languages
 │   ├── layouts/Base.astro      # document shell + design contract comment
-│   ├── lib/                    # contact facts, specimen resolution, cn()
+│   ├── lib/                    # contact facts, project resolution, cn()
 │   ├── pages/
 │   │   ├── index.astro         # the sheet (Home)
 │   │   ├── es/index.astro
 │   │   ├── work/[slug].astro   # case study
 │   │   └── es/work/[slug].astro
-│   └── styles/global.css       # tokens, plates, specimen primitives
+│   └── styles/global.css       # tokens, plates, sheet primitives
 ├── components.json             # shadcn config
 ├── CONTEXT.md                  # domain vocabulary (binding)
 ├── PRODUCT.md                  # product context
@@ -70,7 +70,7 @@ Problem → Decisions (with Rejected Alternatives) → Result:
 
 ## Adding or editing a case study
 
-1. Add `src/content/specimens/<en|es>/<slug>.mdx`.
+1. Add `src/content/projects/<en|es>/<slug>.mdx`.
 2. Frontmatter carries facts (title, role, year, state, stack, links, order);
    the body carries Problem → Decisions → Result. `<Decision>` is injected via
    the `components` prop, so authors do not import it.
@@ -88,7 +88,7 @@ design change. Until the files exist the site renders reserved plates.
 | Résumé      | `public/andres-sanabria-cv.pdf` | `src/lib/contact.ts` (`resume`)      |
 | Headshot    | `public/portrait.jpg`         | `src/lib/contact.ts` (`portrait`)     |
 | Domain      | `astro.config.mjs` → `site`   | currently `https://andressanabria.dev` |
-| Terminal cast | `public/casts/dolphin.cast` | `cast` field on the specimen           |
+| Terminal cast | `public/casts/dolphin.cast` | `cast` field on the project           |
 
 ## Rules that are not negotiable
 

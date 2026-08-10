@@ -8,7 +8,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ---------------------------------------------------------------------------
-   Type Specimen — design tokens
+   Foundry sheet — design tokens
    Semantic values live on :root so they can flip per theme; @theme inline maps
    them into Tailwind utilities without freezing the flip.
 --------------------------------------------------------------------------- */
@@ -89,7 +89,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Dark is the default rendition: the reversed specimen plate. Light is the
+/* Dark is the default rendition: the reversed plate. Light is the
    printed sheet, and takes over when the reader's system asks for it. */
 :root {
   --ground: #111110;
@@ -111,7 +111,7 @@
      the nav drops to a second row and the rail is correspondingly taller. */
   --rail-h: 5.75rem;
 
-  /* Shadcn's semantic roles, routed through the specimen tokens above rather
+  /* Shadcn's semantic roles, routed through the sheet tokens above rather
      than its own generic palette — so every shadcn component inherits the
      committed world instead of introducing a second one. These already flip
      per plate because the tokens they point at do; no separate .dark block
@@ -267,7 +267,7 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Specimen components
+   Sheet components
 --------------------------------------------------------------------------- */
 
 @layer components {
@@ -286,7 +286,7 @@
     max-width: 72rem;
   }
 
-  /* Metadata rail — mono, small caps, tabular. The specimen's slug line. */
+  /* Metadata rail — mono, small caps, tabular. The project's slug line. */
   .rail {
     font-family: var(--font-mono);
     font-size: var(--text-micro);
@@ -299,7 +299,7 @@
 
   .rail-strong { color: var(--ink); }
 
-  /* The showing: the specimen's headline setting. Width axis is the world's
+  /* The showing: the project's headline setting. Width axis is the world's
      own motion — it settles once, from condensed to its set width. */
   .showing {
     font-size: var(--text-showing);
@@ -351,7 +351,7 @@
     }
   }
 
-  /* Measure rule: a hairline with tick ends, as used to dimension a specimen */
+  /* Measure rule: a hairline with tick ends, as used to dimension a sheet */
   .measure {
     position: relative;
     border-top: 1px solid var(--rule-strong);
@@ -371,10 +371,10 @@
   .measure::before { inset-inline-start: 0; }
   .measure::after { inset-inline-end: 0; }
 
-  /* Specimen entry: one project, listed as a catalogued item. The stack line
+  /* Project entry: one project, listed as a catalogued item. The stack line
      sets inside the same row so hover/focus covers the whole strip, not just
      the title block above it — the strip is one hit target, not two. */
-  .spec-row {
+  .project-row {
     display: grid;
     grid-template-columns: 2.5rem 1fr;
     grid-template-areas:
@@ -394,12 +394,12 @@
   /* The catalogue is closed on both ends: every entry is ruled above, and the
      last one is ruled below, so the table reads as a bounded object rather
      than a list that trails off. */
-  li:last-child > .spec-row {
+  li:last-child > .project-row {
     border-bottom: 1px solid var(--rule);
   }
 
   @media (min-width: 60rem) {
-    .spec-row {
+    .project-row {
       grid-template-columns: 2.5rem minmax(0, 1fr) 19rem 10.5rem;
       grid-template-areas:
         "num  title desc meta"
@@ -412,14 +412,14 @@
     }
   }
 
-  .spec-row:hover,
-  .spec-row:focus-visible {
+  .project-row:hover,
+  .project-row:focus-visible {
     background: var(--accent-wash);
     outline-offset: 0;
   }
 
   /* Project titles stay steady while the row communicates its active state. */
-  .spec-name {
+  .project-name {
     font-size: clamp(1.875rem, 5.5vw, 3.25rem);
     line-height: 0.95;
     letter-spacing: -0.03em;
@@ -439,7 +439,7 @@
     padding-top: 2rem;
   }
 
-  /* Alternates: the specimen's showing of glyphs considered and not set.
+  /* Alternates: the showing of glyphs considered and not set.
      This is how a Rejected Alternative renders. */
   .alt {
     display: grid;

@@ -29,8 +29,8 @@ export const ui = {
     'about.work':
       'The projects here are public and shipped. You can inspect the source, read the decisions behind them, and see how the work behaves in use.',
 
-    'specimens.heading': 'Projects',
-    'specimens.read': 'Read the project',
+    'projects.heading': 'Projects',
+    'projects.read': 'Read the project',
 
     'inUse.heading': 'Casts',
     'inUse.caption':
@@ -66,7 +66,7 @@ export const ui = {
   },
 
   es: {
-    'meta.title': 'Andrés Sanabria — Muestrario N.º 01',
+    'meta.title': 'Andrés Sanabria — Proyecto N.º 01',
     'meta.description':
       'Andrés Sanabria construye productos con agentes por dentro. Tres proyectos publicados y públicos, con las decisiones y las alternativas detrás de cada uno.',
     'rail.lang': 'Idioma',
@@ -91,8 +91,8 @@ export const ui = {
     'about.work':
       'Los proyectos de aquí son públicos y están publicados. Puedes inspeccionar el código, leer las decisiones detrás de ellos y ver cómo funcionan en uso.',
 
-    'specimens.heading': 'Proyectos',
-    'specimens.read': 'Leer el proyecto',
+    'projects.heading': 'Proyectos',
+    'projects.read': 'Leer el proyecto',
 
     'inUse.heading': 'Grabaciones',
     'inUse.caption':

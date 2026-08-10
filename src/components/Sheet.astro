@@ -1,7 +1,7 @@
 ---
 import { render } from 'astro:content';
 import { useTranslations, localePath, type Locale } from '../i18n/ui';
-import type { Specimen } from '../lib/specimens';
+import type { Project } from '../lib/projects';
 import Decision from './Decision.astro';
 import InUse from './InUse.astro';
 import Arrow from './Arrow.astro';
@@ -9,7 +9,7 @@ import BrandIcon from './BrandIcon.astro';
 
 interface Props {
   locale: Locale;
-  entry: Specimen;
+  entry: Project;
   isFallback: boolean;
 }
 
