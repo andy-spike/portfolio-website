@@ -10,6 +10,7 @@ import {
 } from "../i18n/ui";
 import { CONTACT } from "../lib/contact";
 import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
 
 interface Props {
   locale: Locale;
@@ -76,6 +77,7 @@ const otherLocale: Locale = locale === "en" ? "es" : "en";
     <meta name="twitter:image" content={ogImage.href} />
     <meta name="twitter:image:alt" content={showingText(locale)} />
     <Analytics />
+    <SpeedInsights />
     <script is:inline>
       // Dark is the default plate; a stored choice or a system light preference wins.
       (function () {
