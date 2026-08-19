@@ -2,14 +2,18 @@ import type { APIRoute } from 'astro';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { createClient } from '@supabase/supabase-js';
 import { embed, streamText, type ModelMessage } from 'ai';
+import {
+  OPENROUTER_API_KEY,
+  OPENROUTER_MODEL,
+  SUPABASE_SECRET_KEY,
+  SUPABASE_URL,
+} from 'astro:env/server';
 import { CORPUS_LOCALE, EMBEDDING_MODEL } from '../../lib/corpus';
 import { frame } from '../../lib/ask-stream';
 import { locales, type Locale } from '../../i18n/ui';
 
 /** The one route on the site that is not prerendered. */
 export const prerender = false;
-
-const MODEL = process.env.OPENROUTER_MODEL ?? 'deepseek/deepseek-v4-flash-0731';
 
 const SOURCE_LIMIT = 4;
 
@@ -45,12 +49,6 @@ interface MatchedChunk {
   title: string;
   content: string;
   similarity: number;
-}
-
-function env(name: string): string {
-  const value = process.env[name];
-  if (!value) throw new Error(`${name} is not set`);
-  return value;
 }
 
 /**
@@ -124,8 +122,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   let openrouter: ReturnType<typeof createOpenRouter>;
   let sources: MatchedChunk[];
   try {
-    const supabase = createClient(env('SUPABASE_URL'), env('SUPABASE_SECRET_KEY'));
-    openrouter = createOpenRouter({ apiKey: env('OPENROUTER_API_KEY') });
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SECRET_KEY);
+    openrouter = createOpenRouter({ apiKey: OPENROUTER_API_KEY });
 
     // The first hop's address, or the socket's when there is no proxy in front.
     const ip =
@@ -161,7 +159,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   const result = streamText({
-    model: openrouter.chat(MODEL),
+    model: openrouter.chat(OPENROUTER_MODEL),
     system: systemPrompt(locale as Locale, sources),
     messages: history,
     providerOptions: {

@@ -23,8 +23,10 @@ create table if not exists corpus_chunks (
   locale text not null default 'en'
 );
 
+-- The operator class lives in `extensions` with the type, and a migration does
+-- not run with the dashboard's search_path, so it has to be named in full.
 create index if not exists corpus_chunks_embedding_idx
-  on corpus_chunks using hnsw (embedding vector_cosine_ops);
+  on corpus_chunks using hnsw (embedding extensions.vector_cosine_ops);
 
 alter table corpus_chunks enable row level security;
 
@@ -38,6 +40,10 @@ create or replace function match_chunks(
 returns table (file text, title text, content text, similarity float)
 language sql
 stable
+-- `<=>` is pgvector's own operator, so `extensions` has to be on the path for
+-- the body to resolve. Pinning it here also keeps the function from depending
+-- on whatever path the caller happens to bring.
+set search_path = public, extensions
 as $$
   select c.file, c.title, c.content, 1 - (c.embedding <=> query_embedding)
   from corpus_chunks c
@@ -65,6 +71,7 @@ create or replace function bump_rate_limit(
 )
 returns boolean
 language plpgsql
+set search_path = public
 as $$
 declare
   hits int;
