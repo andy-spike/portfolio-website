@@ -124,7 +124,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   let openrouter: ReturnType<typeof createOpenRouter>;
   let sources: MatchedChunk[];
   try {
-    const supabase = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'));
+    const supabase = createClient(env('SUPABASE_URL'), env('SUPABASE_SECRET_KEY'));
     openrouter = createOpenRouter({ apiKey: env('OPENROUTER_API_KEY') });
 
     // The first hop's address, or the socket's when there is no proxy in front.

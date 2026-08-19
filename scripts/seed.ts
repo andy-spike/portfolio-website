@@ -5,7 +5,7 @@
  * rather than merged — a passage deleted from a file must stop being a Source,
  * and at this size a full rewrite is cheaper than reconciling.
  *
- * Needs OPENROUTER_API_KEY, SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.
+ * Needs OPENROUTER_API_KEY, SUPABASE_URL and SUPABASE_SECRET_KEY in .env.
  */
 import { readFile, readdir } from 'node:fs/promises';
 import { basename, join } from 'node:path';
@@ -25,7 +25,7 @@ function required(name: string): string {
 const openrouter = createOpenRouter({ apiKey: required('OPENROUTER_API_KEY') });
 const supabase = createClient(
   required('SUPABASE_URL'),
-  required('SUPABASE_SERVICE_ROLE_KEY')
+  required('SUPABASE_SECRET_KEY')
 );
 
 const files = (await readdir(CORPUS_DIR)).filter((f) => f.endsWith('.md')).sort();

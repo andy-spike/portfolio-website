@@ -82,8 +82,9 @@ The Agent needs three secrets and one seeded store. Without them Ask still
 loads and every reply is an honest failure; it never invents an answer.
 
 1. Copy `.env.example` to `.env` and fill it in: an OpenRouter key, and the
-   Supabase URL plus service role key. `.env` is git-ignored and the service
-   role key is server-only — it must never reach the client.
+   Supabase URL plus a secret key. `.env` is git-ignored, and the secret key
+   bypasses row level security — it is server-only and must never reach the
+   client.
 2. Run `supabase/migrations/0001_corpus.sql` against the Supabase project once.
 3. Write the Corpus in `src/content/corpus/*.md`. Each `#`/`##` section is one
    chunk and one citable Source, so write headings as the question a reader

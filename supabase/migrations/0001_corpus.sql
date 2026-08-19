@@ -3,7 +3,10 @@
 -- role key from the server only; RLS is on with no policy, so the anon key sees
 -- nothing.
 
-create extension if not exists vector;
+-- Supabase keeps extensions out of `public`, and the type has to be qualified
+-- the same way it was installed. https://supabase.com/docs/guides/ai/vector-columns
+create schema if not exists extensions;
+create extension if not exists vector with schema extensions;
 
 -- One row per Corpus chunk. The dimension is fixed by the embedding model
 -- (text-embedding-3-small, 1536): changing the model means a migration and a
@@ -16,7 +19,7 @@ create table if not exists corpus_chunks (
   file text not null,
   title text not null,
   content text not null,
-  embedding vector(1536) not null,
+  embedding extensions.vector(1536) not null,
   locale text not null default 'en'
 );
 
@@ -28,7 +31,7 @@ alter table corpus_chunks enable row level security;
 -- Top-k by cosine distance. `<=>` is cosine distance, so similarity is 1 minus
 -- it; the order is by distance either way, which is what the index serves.
 create or replace function match_chunks(
-  query_embedding vector(1536),
+  query_embedding extensions.vector(1536),
   match_limit int,
   filter_locale text
 )
