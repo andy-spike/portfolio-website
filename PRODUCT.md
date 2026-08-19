@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Astro 7.2 (existing scaffold, pnpm, Node >=22.12). Tailwind v4 with design tokens as CSS custom properties. Shadcn (`components.json`, style `base-sera`) for button primitives and Lucide for generic icons, both retokened onto the existing palette rather than left at their defaults; `@astrojs/react` is installed only to render those as unhydrated, build-time-only components — no client-side React ships. Deploy target: Vercel.
+Astro 7.2 (existing scaffold, pnpm, Node >=24). Tailwind v4 with design tokens as CSS custom properties. shadcn (`components.json`, style `new-york`, Radix primitives) supplies the interface primitives and Lucide the generic icons, both retokened onto the print palette rather than left at their defaults — a bridge in `global.css` points shadcn's semantic tokens at the site's own, and sets every radius to 0. `@astrojs/react` renders most of these unhydrated at build time; the exception is Ask, which is a hydrated React island because it is an application. Deploy target: Vercel.
 
 ## Users
 
@@ -20,11 +20,11 @@ Both audiences exist in two markets: remote English-speaking companies, and comp
 
 ## Product Purpose
 
-Present three shipped, publicly usable products as evidence that Andrés builds real software, and convert a convinced reader into an email. Success is a reply from a hiring manager. The site is not a blog, a résumé transcription, or a personal homepage.
+Present three shipped, publicly usable products as evidence that Andrés builds real software, demonstrate the claim live through the Agent on Home, and convert a convinced reader into an email. Success is a reply from a hiring manager. The site is not a blog, a résumé transcription, or a personal homepage.
 
 ## Positioning
 
-Andrés builds **Agent-Native Products**: products with AI agents operating inside them rather than alongside them. Armin exposes its own domain to agents through an MCP server; Dolphin orchestrates coding agents (Codex, Claude Code) as its central generation engine. This is deliberately narrower than "AI engineer" — it excludes model training, research, and data science, which he does not do — and it is verifiable in public source, which the broader claim would not be.
+Andrés is an **AI Product Engineer**: he builds web software products with AI agents integrated into them. Armin exposes its own domain to agents through an MCP server; Dolphin orchestrates coding agents (Codex, Claude Code) as its central generation engine. The claim excludes model training, research, and data science, which he does not do — and it is verifiable in public source, which a broader "AI engineer" claim would not be.
 
 ## Operating Context
 
@@ -34,10 +34,11 @@ The Screener arrives needing an artifact to attach to an internal message. Faili
 
 ## Capabilities and Constraints
 
-- Four surfaces: Home, and one Case Study each for Dolphin, Armin, and Citadela. No other pages.
+- Five surfaces: Home, one Case Study each for Dolphin, Armin, and Citadela, and Ask. No other pages.
 - Content is authored by Andrés, in a fixed Case Study shape: Problem, Decisions, Rejected Alternatives, Result.
 - English and Spanish. Spanish is a genuine market requirement, not a nicety. A missing Spanish translation must fall back to English, never 404.
-- One embedded Terminal Cast (Dolphin driving a coding agent), replayed from a local recording. The site never runs an agent or calls a model provider at request time.
+- One embedded Terminal Cast (Dolphin driving a coding agent), replayed from a local recording.
+- One live Agent, on Ask and nowhere else. Ask is its own surface and its own application: a chat the reader can actually use, in its own shell, reached from the Ask mark in the bottom corner of every other page and from the Fascia. The Agent answers only from the Corpus, cites its Source, and refuses when no Source supports an answer. It runs on Vercel AI SDK and Postgres pgvector, behind a rate limit and a monthly budget flag. Until it is connected, the interface is complete and every reply is the honest system state — no answer is invented.
 - No blog, CMS, analytics dashboard, comment system, newsletter, or client-side search.
 - Domain terminology is defined in `CONTEXT.md` and is binding.
 
@@ -71,9 +72,9 @@ Known stale fact to repair: `armin/package.json` still points `homepage`, `repos
 1. **Evidence over assertion.** Every claim on the site resolves to something the reader can open, run, or download. A claim with no artifact behind it gets cut.
 2. **The Rejected Alternative is the product.** Judgment is only visible in what was turned down. A Decision recorded without the option it beat proves nothing and does not ship.
 3. **Serve the exit.** The reader will leave for GitHub mid-visit. Anything essential must land before that, and the return path must be obvious.
-4. **Narrow claims beat broad ones.** "Agent-Native Products" is defensible where "AI engineer" is not. Precision is the credibility strategy.
+4. **Narrow claims beat broad ones.** "AI Product Engineer" is defensible where "AI engineer" is not. Precision is the credibility strategy.
 5. **Never imply seniority.** Silence about experience is the position. Any copy that reads as inflation is a defect, not a style choice.
 
 ## Accessibility & Inclusion
 
-Bilingual content requires correct `lang` attributes per document and a language switcher that is reachable and announced, not a flag icon. Beyond that, no product-specific requirement was established; standard craft-floor accessibility applies.
+Bilingual content requires correct `lang` attributes per document and a language switcher that is reachable and announced, not a flag icon. The Agent answers in the page's language, and its conversation is keyboard-reachable and announced to screen readers. Beyond that, no product-specific requirement was established; standard craft-floor accessibility applies.

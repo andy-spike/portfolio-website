@@ -1,0 +1,83 @@
+---
+import { useTranslations, localePath, defaultLocale, type Locale } from '../i18n/ui';
+import { getProjects, lineToken } from '../lib/projects';
+import Arrow from './Arrow.astro';
+import SignHead from './SignHead.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const projects = await getProjects(locale);
+---
+
+{/*
+  The directory: every project at full length, each a printed block of its
+  own, chipped with its project colour. A block fills with that colour as it
+  lifts off the paper.
+*/}
+<section
+  id="projects"
+  aria-labelledby="projects-heading"
+  class="span scroll-mt-[var(--fascia-h)] pb-[clamp(3.5rem,8vw,6rem)] pt-[clamp(3rem,7vw,5rem)]"
+>
+  <SignHead
+    id="projects-heading"
+    heading={t('projects.heading')}
+    meta={String(projects.length).padStart(2, '0')}
+  />
+
+  <ol class="m-0 mt-[clamp(2rem,4vw,3rem)] grid list-none gap-4 p-0">
+    {
+      projects.map(({ slug, entry, isFallback }) => (
+        <li>
+          <a
+            href={localePath(locale, `/work/${slug}`)}
+            class="entry"
+            style={`--row-color: ${lineToken(entry.data.order)}`}
+          >
+            <span class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+              <span class="flex min-w-0 items-center gap-4">
+                <span class="ticket-chip shrink-0" aria-hidden="true">
+                  {String(entry.data.order).padStart(2, '0')}
+                </span>
+                <span class="entry-name">{entry.data.title}</span>
+              </span>
+
+              <span class="flex flex-wrap items-center gap-3">
+                {isFallback && (
+                  <span class="legend">
+                    <span aria-hidden="true">{defaultLocale.toUpperCase()}</span>
+                    <span class="sr-only">{t('fallback.notice')}</span>
+                  </span>
+                )}
+                <span class="plate" lang={isFallback ? defaultLocale : undefined}>
+                  {entry.data.state}
+                </span>
+              </span>
+            </span>
+
+            <span class="ink-muted mt-4 block max-w-[70ch] text-lead" lang={isFallback ? defaultLocale : undefined}>
+              {entry.data.character}
+            </span>
+
+            <span class="mt-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+              <span class="legend flex flex-wrap gap-x-3 gap-y-1.5">
+                {entry.data.stack.map((tech) => (
+                  <span>{tech}</span>
+                ))}
+              </span>
+
+              <span class="plate plate-solid">
+                {t('projects.read')}
+                <Arrow dir="right" class="size-3.5 shrink-0" />
+              </span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</section>

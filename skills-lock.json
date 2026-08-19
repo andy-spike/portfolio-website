@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "interactive-portfolio": {
+      "source": "davila7/claude-code-templates",
+      "sourceType": "github",
+      "skillPath": "cli-tool/components/skills/creative-design/interactive-portfolio/SKILL.md",
+      "computedHash": "2184ac2d4ed69f544140dc41a6b21784ed7793dee88b9c4b4b9debd3b0f61a5c"
+    }
+  }
+}

@@ -1,0 +1,82 @@
+---
+import "../styles/global.css";
+import { useTranslations, localePath, type Locale } from "../i18n/ui";
+import { CONTACT } from "../lib/contact";
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
+
+interface Props {
+  locale: Locale;
+  path: string;
+}
+
+const { locale, path } = Astro.props;
+const t = useTranslations(locale);
+
+const pageTitle = t("ask.meta.title");
+const pageDescription = t("ask.meta.description");
+const canonical = new URL(localePath(locale, path), Astro.site);
+const ogImage = new URL(`/og-${locale}.png`, Astro.site);
+const ogLocales: Record<Locale, string> = { en: "en_US", es: "es_CO" };
+const otherLocale: Locale = locale === "en" ? "es" : "en";
+---
+
+{/*
+  The shell Ask runs in, and the one place on the site that is not the sheet.
+
+  There is no Fascia, no Colophon and no page scroll: the chat owns the
+  viewport and scrolls inside itself, because it is an application and not a
+  section of a document. The way back to the site is the first thing in its
+  bar. Everything else — tokens, fonts, the print kit — is the same world the
+  sheet is built from, loaded from the same stylesheet.
+*/}
+<html lang={locale} data-path={path}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical.href} />
+    <link
+      rel="alternate"
+      hreflang="en"
+      href={new URL(localePath("en", path), Astro.site).href}
+    />
+    <link
+      rel="alternate"
+      hreflang="es"
+      href={new URL(localePath("es", path), Astro.site).href}
+    />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(localePath("en", path), Astro.site).href}
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={CONTACT.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:locale" content={ogLocales[locale]} />
+    <meta property="og:locale:alternate" content={ogLocales[otherLocale]} />
+    <meta property="og:image" content={ogImage.href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage.href} />
+    <Analytics />
+    <SpeedInsights />
+  </head>
+
+  <body class="overflow-hidden"
+    ><!--
+ASK SURFACE CONTRACT (surface roll, seed key 36013237; structure "The Bench", rebuilt as an application)
+THESIS: Ask is not a section of the sheet, it is a chat application the reader can use. Building one that genuinely works — transcript, composer, keyboard contract, stick-to-bottom, empty state, honest system state — is itself part of the evidence the site exists to present.
+STRUCTURE: The viewport is the frame. A bar carries the way back to the site, the language, and a new-chat block. Under it the transcript scrolls inside itself: the reader's turns in the accent, the Agent's on paper, both as the kit's printed blocks. The composer is pinned beneath, and never scrolls away.
+FIRST VIEWPORT: An empty chat, centred: the invitation, one line naming what the Agent answers from, four starters that send with one press, and the box already focused.
+SIGNATURE: The press, inherited — every block in the app lifts and presses on the same 120ms ease, including the box. The one new mark is the waiting state: three ink squares stepping while a reply is outstanding.
+FINISH: The Agent answers from the Corpus and prints the Sources it stood on under each reply. When the Corpus does not support an answer it says so; the Sources line prints the reserved plate rather than nothing. No answer is invented.
+-->
+    <slot />
+  </body>
+</html>

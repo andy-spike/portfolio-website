@@ -1,0 +1,20 @@
+---
+import ChatShell from '../../layouts/ChatShell.astro';
+import { Chat } from '../../components/chat/Chat';
+import { chatStrings } from '../../components/chat/strings';
+import { useTranslations, localePath } from '../../i18n/ui';
+
+const t = useTranslations('es');
+---
+
+<ChatShell locale="es" path="/ask">
+  <Chat
+    client:load
+    strings={chatStrings('es')}
+    locale="es"
+    homeHref={localePath('es', '/')}
+    altLocaleHref={localePath('en', '/ask')}
+    altLocaleLabel="EN"
+    toBottomLabel={t('ask.toBottom')}
+  />
+</ChatShell>

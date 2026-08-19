@@ -49,3 +49,12 @@ export async function getProject(locale: Locale, slug: string) {
   const projects = await getProjects(locale);
   return projects.find((s) => s.slug === slug);
 }
+
+/**
+ * Every Portfolio Project owns one colour, keyed by its position in the
+ * directory. The colours sit on paper under black ink; they are the project's
+ * identity across every block it appears in.
+ */
+export function lineToken(order: number): string {
+  return `var(--line-${((order - 1) % 3) + 1})`;
+}

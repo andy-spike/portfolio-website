@@ -1,0 +1,76 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+import { CONTACT } from '../lib/contact';
+import { FileText, Mail } from 'lucide-react';
+import BrandIcon from './BrandIcon.astro';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+/* The way out is the source: the one solid-ink block on the page. Everything
+   else travels beside it as a small chip; the résumé is the one mark that
+   names itself, because it is the file a recruiter forwards.
+
+   The résumé does not exist yet. Its mark holds the position, hatched, and
+   does not pretend to be a link — a download to a 404 fakes a Placeholder
+   Asset, which is the one thing a site built on evidence cannot do. Set
+   CONTACT.resumeIsPlaceholder to false once the file lands. */
+const resumePending = CONTACT.resumeIsPlaceholder;
+
+const marks = [
+  { key: 'resume', label: t('contact.resume'), href: CONTACT.resume, named: true },
+  { key: 'email', label: t('contact.email'), href: CONTACT.mailto },
+  { key: 'linkedin', label: t('contact.linkedin'), href: CONTACT.linkedin, external: true },
+  { key: 'x', label: t('contact.x'), href: CONTACT.x, external: true },
+] as const;
+---
+
+<div class="flex flex-wrap items-center gap-x-4 gap-y-3">
+  <a href={CONTACT.github} class="btn btn-solid" target="_blank" rel="noopener noreferrer">
+    <BrandIcon name="github" />
+    {t('contact.github')}
+    <Arrow dir="out" class="size-3.5 shrink-0" />
+  </a>
+
+  <ul class="m-0 flex list-none flex-wrap items-center gap-2.5 p-0">
+    {
+      marks.map((mark) =>
+        mark.key === 'resume' && resumePending ? (
+          <li>
+            <span class="chip hatched touch-target" title={t('contact.resumePending')}>
+              <FileText size={15} className="size-[15px] shrink-0" aria-hidden="true" />
+              {mark.label}
+              <span class="sr-only">— {t('contact.resumePending')}</span>
+            </span>
+          </li>
+        ) : (
+        <li>
+          <a
+            href={mark.href}
+            class="chip touch-target"
+            aria-label={'named' in mark && mark.named ? undefined : mark.label}
+            title={mark.label}
+            target={'external' in mark && mark.external ? '_blank' : undefined}
+            rel={'external' in mark && mark.external ? 'noopener noreferrer' : undefined}
+            download={mark.key === 'resume' ? true : undefined}
+          >
+            {mark.key === 'resume' && (
+              <>
+                <FileText size={15} className="size-[15px] shrink-0" />
+                {mark.label}
+              </>
+            )}
+            {mark.key === 'email' && <Mail size={16} className="size-4 shrink-0" />}
+            {mark.key === 'linkedin' && <BrandIcon name="linkedin" />}
+            {mark.key === 'x' && <BrandIcon name="x" />}
+          </a>
+        </li>
+        )
+      )
+    }
+  </ul>
+</div>

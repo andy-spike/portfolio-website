@@ -1,0 +1,25 @@
+---
+/**
+ * A division on the sheet: the section's name printed as a solid ink plate,
+ * seated on a 3px rule that spans the measure, with an optional count set at
+ * the far end. Every division on the site is signed the same way.
+ */
+interface Props {
+  id: string;
+  heading: string;
+  /** A figure set at the end of the rule — a count, never a label. */
+  meta?: string;
+  class?: string;
+}
+const { id, heading, meta, class: className = '' } = Astro.props;
+---
+
+<div class:list={['flex items-end justify-between gap-6 border-b-[3px] border-ink pb-3', className]}>
+  <h2
+    id={id}
+    class="inline-block bg-ink px-3.5 py-1.5 text-[clamp(1.25rem,2.4vw,1.75rem)] font-extrabold uppercase leading-none tracking-[0.02em] text-paper"
+  >
+    {heading}
+  </h2>
+  {meta && <span class="legend legend-strong leading-none" aria-hidden="true">{meta}</span>}
+</div>

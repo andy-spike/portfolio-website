@@ -1,0 +1,68 @@
+---
+import { useTranslations, localePath, type Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  path: string;
+  /** Match the tighter trim a case study uses, so the edges line up. */
+  trim?: boolean;
+}
+
+const { locale, path, trim = false } = Astro.props;
+const t = useTranslations(locale);
+
+const other: Locale = locale === 'en' ? 'es' : 'en';
+
+const nav = [
+  { href: localePath(locale, '/#projects'), label: t('nav.projects') },
+  { href: localePath(locale, '/#casts'), label: t('nav.casts') },
+  { href: localePath(locale, '/#about'), label: t('nav.about') },
+];
+---
+
+{/*
+  The fascia: a paper strip keyed to the page by a 3px ink rule. The name is
+  the one solid plate on it; the links print in ink and reverse on approach.
+*/}
+<header class="fixed inset-x-0 top-0 z-40 border-b-[3px] border-ink bg-paper">
+  <div
+    class:list={[
+      'span',
+      trim && 'span-trim',
+      'relative flex min-h-[calc(var(--fascia-h)-3px)] flex-wrap items-center justify-between gap-x-6 gap-y-2 py-2.5 sm:py-0',
+    ]}
+  >
+    <a href={localePath(locale, '/')} class="plate plate-solid no-underline">
+      Andrés&nbsp;Sanabria
+    </a>
+
+    <nav
+      aria-label={t('nav.primary')}
+      class="legend order-3 flex w-full items-center gap-x-5 sm:absolute sm:left-1/2 sm:top-1/2 sm:order-none sm:w-auto sm:-translate-x-1/2 sm:-translate-y-1/2"
+    >
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            aria-current={item.path === path ? 'page' : undefined}
+            class="legend-strong -mx-1.5 -my-1 px-1.5 py-1 no-underline transition-colors duration-100 hover:bg-ink hover:text-paper aria-[current=page]:bg-ink aria-[current=page]:text-paper"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="legend flex items-center gap-x-4">
+      <a
+        href={localePath(other, path)}
+        class="legend-strong border-2 border-ink px-2 py-1 no-underline transition-colors duration-100 hover:bg-ink hover:text-paper"
+        lang={other}
+        hreflang={other}
+        title={t('rail.lang')}
+      >
+        {other.toUpperCase()}
+      </a>
+    </div>
+  </div>
+</header>

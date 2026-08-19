@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 /**
@@ -25,8 +26,8 @@ const projects = defineCollection({
       live: z.string().url().optional(),
       download: z.string().url().optional(),
     }),
-    /** Set true only when a Terminal Cast exists for this project. */
-    cast: z.string().optional(),
+    /** YouTube URL for this project's Cast. Unset renders the reserved plate. */
+    cast: z.string().url().optional(),
     draft: z.boolean().default(false),
   }),
 });

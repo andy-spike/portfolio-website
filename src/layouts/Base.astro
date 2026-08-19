@@ -1,7 +1,8 @@
 ---
 import "../styles/global.css";
-import Rail from "../components/Rail.astro";
+import Fascia from "../components/Fascia.astro";
 import Colophon from "../components/Colophon.astro";
+import AskMark from "../components/AskMark.astro";
 import {
   useTranslations,
   localePath,
@@ -79,41 +80,35 @@ const otherLocale: Locale = locale === "en" ? "es" : "en";
     <meta name="twitter:image:alt" content={showingText(locale)} />
     <Analytics />
     <SpeedInsights />
-    <script is:inline>
-      // Dark is the default plate; a stored choice or a system light preference wins.
-      (function () {
-        try {
-          var stored = localStorage.getItem("plate");
-          if (stored === "light" || stored === "dark") {
-            document.documentElement.setAttribute("data-theme", stored);
-          }
-        } catch (e) {}
-      })();
-    </script>
   </head>
 
   <body
     ><!--
-THESIS: Every project is one object shown at three magnifications, measured and annotated. Refuses the project-card grid where each project gets the same 60 words and none is examined.
-OWN-WORLD: The reversed plate. Ink ground #111110 against paper #f2f1ee; one vermilion, spent only on things the reader can act on. Archivo Variable — its width axis is the page's motion — with Martian Mono for measurement. Hairline rules with tick ends, tabular figures, struck alternates. Shadcn (base-sera style) supplies Button and Lucide icons, retokened onto this palette rather than its own.
-STORY: A hiring manager reads a claim answered by three verifiable facts, opens one sheet, sees the alternatives that were rejected, and writes.
-FIRST VIEWPORT: Metadata rail. The positioning line set enormous. Beneath it a key of three verifiable facts, then a measure rule and the first project entry.
-FORM: Foundry sheet; candidate 7 of 7 on the grounded list; seed key f2350afb.
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+THESIS: The site is a stack of printed blocks on warm paper, not a wayfinding program and not the dark developer portfolio with one neon accent. It refuses both defaults: depth comes from ink borders and hard offset shadows, and every project carries its own saturated colour.
+OWN-WORLD: Warm paper #F6F1E7, block paper #FFFDF6, near-black ink #16130D. 3px ink borders and zero-blur offset shadows as the only depth; no radius, no gradient, no blur. Dolphin yellow #F5B301, Armin orange #F4602A, Citadela teal #2FBFAE, always under black ink. Bricolage Grotesque from a 6rem block claim to body, Azeret Mono for legends and code. Primitives: brick, btn, chip, plate, ticket, window, legend, claim.
+STORY: A hiring manager reads the claim set as the page's largest block, sees three shipped projects as colour-chipped rows, opens one, follows its decisions past the alternatives that were turned down, and leaves through the solid-ink GitHub block to the source.
+FIRST VIEWPORT: Warm paper. A hero brick with a 3px ink border and 8px hard shadow holds the claim at up to 6rem with the emphasis word in a yellow highlight block, the description, the solid-ink GitHub button, and the small marks beside it; the portrait window sits at the right, rotated one degree. Below the brick, three stacked project tickets, each chipped with its project colour, filling with that colour as they lift.
+SIGNATURE: The press. Every actionable block lifts off the paper on hover — translate -2px,-2px, the hard shadow deepening — and presses flush into the paper on active, in 120ms. The project rows and tickets fill with their project colour as they lift; the cue arrow is the page's only moving mark.
+FORM: Classic web neo-brutalism, user-pinned direction (no roll); replaces the platform sign kit, seed key d8cc7f12, which is this build's anti-reference.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 -->
     <a
       href="#content"
-      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-3 focus:bg-plate focus:px-4 focus:py-2 focus:text-ink"
+      class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-3 focus:bg-ink focus:px-4 focus:py-2 focus:font-bold focus:text-paper"
     >
       {t("nav.skipToContent")}
     </a>
 
-    <Rail locale={locale} path={path} trim={trim} />
+    <Fascia locale={locale} path={path} trim={trim} />
 
-    <main id="content" class="flex-1 pt-[var(--rail-h)]">
+    <main id="content" class="flex-1 pt-[var(--fascia-h)]">
       <slot />
     </main>
 
     <Colophon locale={locale} trim={trim} />
+
+    {/* The way into Ask. Ask itself runs in ChatShell, not here, so there is
+        no page left for this layout to withhold the mark from. */}
+    <AskMark locale={locale} />
   </body>
 </html>

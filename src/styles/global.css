@@ -1,198 +1,108 @@
 @import "tailwindcss";
 
-@import "@fontsource-variable/archivo/wdth.css";
-@import "@fontsource-variable/martian-mono/wdth.css";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-
-@custom-variant dark (&:is(.dark *));
+@import "@fontsource-variable/bricolage-grotesque/standard.css";
+@import "@fontsource-variable/azeret-mono";
 
 /* ---------------------------------------------------------------------------
-   Foundry sheet — design tokens
-   Semantic values live on :root so they can flip per theme; @theme inline maps
-   them into Tailwind utilities without freezing the flip.
+   PRINT-SHOP KIT — tokens
+
+   The site is a stack of printed blocks on warm paper: thick ink borders,
+   hard offset shadows, one saturated colour per project. Light is the only
+   plate — the style is a paper style. Semantic values live on :root and map
+   into Tailwind through @theme inline.
 --------------------------------------------------------------------------- */
 
 @theme inline {
   --color-ground: var(--ground);
-  --color-plate: var(--plate);
-  --color-rule: var(--rule);
-  --color-rule-strong: var(--rule-strong);
+  --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
-  --color-ink-faint: var(--ink-faint);
-  --color-accent: var(--accent);
-  --color-accent-ink: var(--accent-ink);
-  --color-accent-wash: var(--accent-wash);
+  --color-rule: var(--rule);
+  --color-line-1: var(--line-1);
+  --color-line-2: var(--line-2);
+  --color-line-3: var(--line-3);
 
-  --font-display: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Martian Mono Variable", ui-monospace, "SF Mono", monospace;
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Azeret Mono Variable", ui-monospace, "SF Mono", monospace;
 
-  --text-showing: clamp(2.5rem, 6vw, 5rem);
-  --text-plate: clamp(2.125rem, 6vw, 4.25rem);
-  --text-lead: clamp(1.0625rem, 1.4vw, 1.3125rem);
-  --text-meta: 0.75rem;
-  --text-micro: 0.6875rem;
+  /* Block lettering and 11px legends in one composition. */
+  --text-claim: clamp(2.75rem, 7.5vw, 6rem);
+  --text-destination: clamp(2rem, 5vw, 3.5rem);
+  --text-plate: clamp(1.75rem, 4.4vw, 3rem);
+  --text-lead: clamp(1.0625rem, 1.25vw, 1.25rem);
+  --text-legend: 0.6875rem;
 
-  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Blocks lift and press. Nothing eases in softly. */
+  --ease-pop: cubic-bezier(0.22, 0.61, 0.36, 1);
 
-  /* Shadcn components reach for the Tailwind "sans" role by default; keep it
-     on the committed face rather than loading a second, unrequested one. */
   --font-sans: var(--font-display);
 
-  --color-ring: var(--ring);
+  /* --- shadcn bridge ------------------------------------------------------
+     shadcn components are added as source and speak a fixed set of semantic
+     tokens. Rather than rewrite every class they ship with, the tokens are
+     pointed at the print shop's own palette, so an unmodified component lands
+     in this world already dressed. There is no second palette: every value
+     below resolves to a token defined above.
 
-  --color-input: var(--input);
+     Radius is 0 through the whole scale, because rule 1 of the kit allows no
+     radius anywhere. `rounded-md` and friends must resolve to a square corner
+     or the components would smuggle one in. */
+  --color-background: var(--ground);
+  --color-foreground: var(--ink);
+  --color-card: var(--paper);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--paper);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--paper);
+  --color-secondary: var(--paper);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--ground);
+  --color-muted-foreground: var(--ink-muted);
+  --color-accent: var(--line-1);
+  --color-accent-foreground: var(--ink);
+  --color-border: var(--ink);
+  --color-input: var(--ink);
+  --color-ring: var(--ink);
+  /* Nothing in the chat is destructive. Mapped so a component that ships the
+     token still renders in the palette rather than in shadcn's red. */
+  --color-destructive: var(--line-2);
+  --color-destructive-foreground: var(--ink);
 
-  --color-border: var(--border);
-
-  --color-destructive: var(--destructive);
-
-  --color-accent-foreground: var(--accent-foreground);
-
-  --color-muted-foreground: var(--muted-foreground);
-
-  --color-muted: var(--muted);
-
-  --color-secondary-foreground: var(--secondary-foreground);
-
-  --color-secondary: var(--secondary);
-
-  --color-primary-foreground: var(--primary-foreground);
-
-  --color-primary: var(--primary);
-
-  --color-popover-foreground: var(--popover-foreground);
-
-  --color-popover: var(--popover);
-
-  --color-card-foreground: var(--card-foreground);
-
-  --color-card: var(--card);
-
-  --color-foreground: var(--foreground);
-
-  --color-background: var(--background);
-
-  --radius-sm: calc(var(--radius) * 0.6);
-
-  --radius-md: calc(var(--radius) * 0.8);
-
-  --radius-lg: var(--radius);
-
-  --radius-xl: calc(var(--radius) * 1.4);
-
-  --radius-2xl: calc(var(--radius) * 1.8);
-
-  --radius-3xl: calc(var(--radius) * 2.2);
-
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius: 0px;
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
 }
 
-/* Dark is the default rendition: the reversed plate. Light is the
-   printed sheet, and takes over when the reader's system asks for it. */
 :root {
-  --ground: #111110;
-  --plate: #191917;
-  --rule: #2c2c28;
-  --rule-strong: #4a4a43;
-  --ink: #f2f0e9;
-  --ink-muted: #9d9a90;
-  /* Quietest readable ink. Held at >=4.5:1 on --ground: it carries real words
-     (rejected-alternate reasons), so it is never decorative grey. */
-  --ink-faint: #85827a;
-  --accent: #4f9d6c;
-  --accent-ink: #78c995;
-  --accent-wash: rgba(79, 157, 108, 0.11);
-  color-scheme: dark;
+  --ground: #F6F1E7;
+  --paper: #FFFDF6;
+  --ink: #16130D;
+  --ink-muted: #57503F;
+  --rule: #DAD1BB;
+  /* One colour per project, always under black ink. */
+  --line-1: #F5B301; /* Dolphin */
+  --line-2: #F4602A; /* Armin */
+  --line-3: #2FBFAE; /* Citadela */
+  color-scheme: light;
 
-  /* The fixed rail's own height. The content reserve and every in-page anchor
-     derive from it, so no heading ever lands underneath the rail. Below 40rem
-     the nav drops to a second row and the rail is correspondingly taller. */
-  --rail-h: 5.75rem;
+  /* The fascia's own height. Every anchor's scroll-margin derives from it. */
+  --fascia-h: 5rem;
 
-  /* Shadcn's semantic roles, routed through the sheet tokens above rather
-     than its own generic palette — so every shadcn component inherits the
-     committed world instead of introducing a second one. These already flip
-     per plate because the tokens they point at do; no separate .dark block
-     needed. --accent intentionally reuses the brand token above: nothing
-     installed yet spends it on a neutral hover (bg-accent) — if a future
-     component does, re-route that one usage rather than re-introducing a
-     second grey "accent". */
-  --background: var(--ground);
-  --foreground: var(--ink);
-  --card: var(--plate);
-  --card-foreground: var(--ink);
-  --popover: var(--plate);
-  --popover-foreground: var(--ink);
-  --primary: var(--accent);
-  --primary-foreground: var(--ground);
-  --secondary: var(--plate);
-  --secondary-foreground: var(--ink);
-  --muted: var(--plate);
-  --muted-foreground: var(--ink-muted);
-  --accent-foreground: var(--ground);
-  --destructive: #c1301a;
-  --border: var(--rule-strong);
-  --input: var(--rule-strong);
-  --ring: var(--accent);
-  --radius: 0rem;
+  /* The chat composer's resting height, shared by the box and the send block. */
+  --composer-h: 3.5rem;
+
+  /* The height every block in the chat's bar is cut to, so the label, the
+     language and the new-chat mark read as one row. It is the kit's own
+     touch-target height, which `.chip` is already built at. */
+  --bar-h: 2.875rem;
 }
 
 @media (min-width: 40rem) {
-  :root { --rail-h: 4.25rem; }
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --ground: #f2f1ee;
-    --plate: #e8e7e2;
-    --rule: #d6d4cd;
-    --rule-strong: #a8a59c;
-    --ink: #131310;
-    --ink-muted: #5c5a52;
-    --ink-faint: #6f6c64;
-    --accent: #286b46;
-    --accent-ink: #1f5c3c;
-    --accent-wash: rgba(40, 107, 70, 0.09);
-    color-scheme: light;
-  }
-}
-
-:root[data-theme="light"] {
-  --ground: #f2f1ee;
-  --plate: #e8e7e2;
-  --rule: #d6d4cd;
-  --rule-strong: #a8a59c;
-  --ink: #131310;
-  --ink-muted: #5c5a52;
-  --ink-faint: #6f6c64;
-  --accent: #286b46;
-  --accent-ink: #1f5c3c;
-  --accent-wash: rgba(40, 107, 70, 0.09);
-  color-scheme: light;
-}
-
-/* The plate toggle shows the mark for the plate a click produces, mirroring
-   exactly the conditions above that decide which plate is active. */
-[data-plate-toggle] .icon-moon {
-  display: none;
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) [data-plate-toggle] .icon-sun {
-    display: none;
-  }
-  :root:not([data-theme="dark"]) [data-plate-toggle] .icon-moon {
-    display: inline-flex;
-  }
-}
-
-:root[data-theme="light"] [data-plate-toggle] .icon-sun {
-  display: none;
-}
-:root[data-theme="light"] [data-plate-toggle] .icon-moon {
-  display: inline-flex;
+  :root { --fascia-h: 3.75rem; }
 }
 
 /* ---------------------------------------------------------------------------
@@ -208,6 +118,8 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     scroll-behavior: smooth;
+    /* The scrollbar belongs to the print shop too. */
+    scrollbar-color: var(--ink) var(--ground);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -225,30 +137,43 @@
     display: flex;
     flex-direction: column;
     font-size: 1rem;
-    line-height: 1.55;
-    @apply bg-background text-foreground;
-    background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='.2'/%3E%3C/svg%3E"),
-      linear-gradient(to right, color-mix(in srgb, var(--rule) 22%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in srgb, var(--rule) 22%, transparent) 1px, transparent 1px);
-    background-size: 220px 220px, 4rem 4rem, 4rem 4rem;
-    background-blend-mode: multiply, normal, normal;
+    line-height: 1.5;
+    /* Flat paper. No texture, no grain, no gradient. */
+    background: var(--ground);
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
   }
 
   ::selection {
-    background: var(--accent);
-    color: #fff;
+    background: var(--line-1);
+    color: var(--ink);
   }
 
+  /* On an ink field the selection reverses with everything else. */
+  .on-ink ::selection {
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  /* Focus prints the block's own rule twice as heavy: the keyline lands hard
+     against the border, never floating off it. A gap would put ground between
+     two ink rules of the same weight, and the ring — symmetric — would then
+     disagree with the offset shadow, which is not. The pair reads as a
+     rendering fault rather than a state. Bare text keeps the 2px breathing
+     room; blocks set their own offset to 0. */
   :focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  .on-ink :focus-visible {
+    outline-color: var(--paper);
   }
 
   a { color: inherit; }
 
   h1, h2, h3, h4 {
-    font-weight: 600;
+    font-weight: 800;
     letter-spacing: -0.02em;
     text-wrap: balance;
     margin: 0;
@@ -256,87 +181,416 @@
 
   p { margin: 0; }
 
-  hr {
-    border: 0;
-    border-top: 1px solid var(--rule);
-    margin: 0;
-  }
-  * {
-    @apply border-border outline-ring/50;
-  }
+  hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
 }
 
 /* ---------------------------------------------------------------------------
-   Sheet components
+   THE KIT — the primitives of the print shop.
+
+   .brick    a printed block: paper fill, 3px ink border, hard offset shadow
+   .btn      an action block; .btn-solid is the ink fill. Presses on active
+   .chip     the small square marks that travel beside a button
+   .plate    a flat label, keyed by a 2px border of its own ink
+   .ticket   one project row; fills with its project colour as it lifts
+   .window   a framed figure: ink title bar, content plate, hard shadow
+   .legend   mono metadata, uppercase, tracked
+   .claim    the claim, set at block-letter scale
+
+   Depth is made only by ink and offset: border and zero-blur shadow.
+   No gradient, no blur, no radius, anywhere.
 --------------------------------------------------------------------------- */
 
 @layer components {
 
-  /* The sheet: a fixed measure with hairline edge rules, like a trimmed plate */
-  .sheet {
+  /* Page measure. */
+  .span {
     width: 100%;
-    max-width: 90rem;
+    max-width: 88rem;
     margin-inline: auto;
-    padding-inline: clamp(1rem, 4vw, 3.5rem);
+    padding-inline: clamp(1.25rem, 4vw, 3.5rem);
   }
 
-  /* A single sheet reads at a tighter trim than the index: the prose measure
-     and the margin rail should sit close enough for the hairline to bind them. */
-  .sheet-trim {
-    max-width: 72rem;
-  }
+  /* A case study reads at a tighter trim than the index. */
+  .span-trim { max-width: 70rem; }
 
-  /* Metadata rail — mono, small caps, tabular. The project's slug line. */
-  .rail {
+  /* --- .legend --------------------------------------------------------- */
+  .legend {
     font-family: var(--font-mono);
-    font-size: var(--text-micro);
-    font-variation-settings: "wdth" 87.5, "wght" 400;
-    letter-spacing: 0.08em;
+    font-size: var(--text-legend);
+    font-weight: 600;
+    letter-spacing: 0.13em;
     text-transform: uppercase;
+    line-height: 1.1;
     color: var(--ink-muted);
     font-variant-numeric: tabular-nums;
   }
 
-  .rail-strong { color: var(--ink); }
+  .legend-strong { color: var(--ink); }
 
-  /* The showing: the project's headline setting. Width axis is the world's
-     own motion — it settles once, from condensed to its set width. */
-  .showing {
-    font-size: var(--text-showing);
-    /* Tight, but clear of its own descenders: below ~0.98 the g of a wrapped
-       line crashes into the caps beneath it at the small end of the clamp. */
-    line-height: 0.98;
-    letter-spacing: -0.04em;
-    font-weight: 600;
-    font-variation-settings: "wdth" 105;
+  /* The quiet tier: secondary text on paper. Named here and not as a
+     Tailwind colour utility because the fills below lift it back to full
+     ink by this class. */
+  .ink-muted { color: var(--ink-muted); }
+
+  /* --- .plate ---------------------------------------------------------- */
+  .plate {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3125rem 0.625rem;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: var(--text-legend);
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The one plate that reverses: solid ink, paper lettering. */
+  .plate-solid {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  /* --- .brick ---------------------------------------------------------- */
+  .brick {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+
+  /* A brick that lifts off the paper when it is acted on. */
+  .brick-lift {
+    transition:
+      translate 120ms var(--ease-pop),
+      box-shadow 120ms var(--ease-pop),
+      background-color 120ms var(--ease-pop);
+  }
+
+  .brick-lift:hover,
+  .brick-lift:focus-visible {
+    translate: -2px -2px;
+    box-shadow: 10px 10px 0 var(--ink);
+    outline-offset: 0;
+  }
+
+  .brick-lift:active {
+    translate: 3px 3px;
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  /* --- the claim -------------------------------------------------------- */
+  .claim {
+    font-size: var(--text-claim);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    font-stretch: 85%;
     text-wrap: balance;
     margin: 0;
   }
 
-  /* The one word the claim turns on, set in accent. This is the single named
-     exception to "accent marks action" — see DESIGN.md. It takes --accent-ink,
-     the token reserved for accent used as text, so the word never reads as the
-     same object as the filled primary action beneath it. */
-  .showing-mark {
-    color: var(--accent-ink);
+  /* The word the claim turns on, set as a printed highlight: a colour block
+     keyed by its own ink border. */
+  .claim-mark {
+    display: inline-block;
+    background: var(--line-1);
+    border: 3px solid var(--ink);
+    /* Vertical padding keeps descenders (g, y) clear of the ink border. */
+    padding: 0.05em 0.14em 0.09em;
+    box-shadow: 4px 4px 0 var(--ink);
   }
 
-  /* The cue to the catalogue: the mark travels down its own length and fades,
-     the way a measurement runs off the edge of a plate. */
-  .cue {
-    transition: color 160ms var(--ease-settle);
+  /* --- .btn ------------------------------------------------------------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem 1.125rem;
+    border: 3px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition:
+      translate 120ms var(--ease-pop),
+      box-shadow 120ms var(--ease-pop),
+      background-color 120ms var(--ease-pop),
+      color 120ms var(--ease-pop);
   }
 
-  .cue-mark {
-    animation: cue-drift 2.6s var(--ease-settle) infinite;
+  .btn:hover,
+  .btn:focus-visible {
+    translate: -2px -2px;
+    box-shadow: 6px 6px 0 var(--ink);
+    outline-offset: 0;
   }
 
-  /* Under the cursor the mark stops travelling and simply stands there —
-     pausing mid-cycle would leave it caught at zero opacity. */
+  .btn:active {
+    translate: 3px 3px;
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  /* The primary action: solid ink. */
+  .btn-solid {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* On the ink field the shadow is paper, so the block still reads as a
+     block sitting on a surface. */
+  .on-ink .btn {
+    box-shadow: 4px 4px 0 var(--paper);
+  }
+
+  .on-ink .btn:hover,
+  .on-ink .btn:focus-visible {
+    box-shadow: 6px 6px 0 var(--paper);
+  }
+
+  .on-ink .btn:active {
+    box-shadow: 0 0 0 var(--paper);
+  }
+
+  .on-ink .btn-solid {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--paper);
+  }
+
+  /* --- .chip: the quiet marks ------------------------------------------- */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 2.875rem;
+    height: 2.875rem;
+    padding-inline: 0.75rem;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--text-legend);
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition:
+      translate 120ms var(--ease-pop),
+      box-shadow 120ms var(--ease-pop),
+      background-color 120ms var(--ease-pop),
+      color 120ms var(--ease-pop);
+  }
+
+  .chip:hover,
+  .chip:focus-visible {
+    translate: -2px -2px;
+    box-shadow: 5px 5px 0 var(--ink);
+    outline-offset: 0;
+  }
+
+  .chip:active {
+    translate: 2px 2px;
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  .on-ink .chip {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--paper);
+    box-shadow: 3px 3px 0 var(--paper);
+  }
+
+  .on-ink .chip:hover,
+  .on-ink .chip:focus-visible {
+    box-shadow: 5px 5px 0 var(--paper);
+    outline-color: var(--paper);
+  }
+
+  .on-ink .chip:active {
+    box-shadow: 0 0 0 var(--paper);
+  }
+
+  /* --- .ticket: one project on the arrival block ------------------------- */
+  .ticket {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0 clamp(0.75rem, 1.6vw, 1.25rem);
+    padding: 0.75rem clamp(0.75rem, 1.6vw, 1.25rem);
+    text-decoration: none;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    transition:
+      translate 120ms var(--ease-pop),
+      box-shadow 120ms var(--ease-pop),
+      background-color 120ms var(--ease-pop);
+  }
+
+  .ticket:hover,
+  .ticket:focus-visible {
+    background: var(--row-color);
+    translate: -2px -2px;
+    box-shadow: 6px 6px 0 var(--ink);
+    outline-offset: 0;
+  }
+
+  .ticket:active {
+    translate: 3px 3px;
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  /* The colour chip: the project's own colour, carrying its number. */
+  .ticket-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: var(--row-color);
+    border: 2px solid var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ticket:hover .ticket-chip,
+  .ticket:focus-visible .ticket-chip {
+    background: var(--paper);
+  }
+
+  .ticket-name {
+    font-size: clamp(1.375rem, 2.6vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+
+  /* --- .entry: one project at full length in the directory --------------- */
+  .entry {
+    display: block;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    text-decoration: none;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    transition:
+      translate 120ms var(--ease-pop),
+      box-shadow 120ms var(--ease-pop),
+      background-color 120ms var(--ease-pop);
+  }
+
+  .entry:hover,
+  .entry:focus-visible {
+    background: var(--row-color);
+    translate: -2px -2px;
+    box-shadow: 8px 8px 0 var(--ink);
+    outline-offset: 0;
+  }
+
+  .entry:active {
+    translate: 3px 3px;
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  /* On the fill, quiet ink comes up to full ink so every word stays legible. */
+  .entry:hover .ink-muted,
+  .entry:focus-visible .ink-muted { color: var(--ink); }
+
+  .entry:hover .legend,
+  .entry:focus-visible .legend { color: var(--ink); }
+
+  /* The solid plate keeps its ink fill on the fill — a black block on the
+     project colour is the most legible mark on it, and the loudest. Flipping
+     it to paper would erase its paper lettering. */
+  .entry:hover .plate:not(.plate-solid),
+  .entry:focus-visible .plate:not(.plate-solid) { background: var(--paper); }
+
+  .entry:hover .ticket-chip,
+  .entry:focus-visible .ticket-chip { background: var(--paper); }
+
+  .entry-name {
+    font-size: var(--text-destination);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    font-weight: 800;
+  }
+
+  /* --- .window: a framed figure ------------------------------------------ */
+  .window {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .window-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.5rem 0.75rem;
+  }
+
+  .window-bar .legend { color: var(--paper); }
+
+  /* --- one decision, with what it turned down ----------------------------- */
+  .decision {
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    margin: 2.5rem 0 1.25rem;
+  }
+
+  /* Raised above `.reading > * + *` (equal specificity, earlier in the
+     layer), so the block's own rhythm holds. */
+  .reading .decision { margin: 2.5rem 0 1.25rem; }
+
+  .struck {
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--ink);
+  }
+
+  /* A reserved position, hatched the way a proof marks a frame held for
+     artwork. Supplying the asset removes the hatch and nothing else. */
+  .hatched {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, currentColor 20%, transparent) 0 1.5px,
+      transparent 1.5px 11px
+    );
+  }
+
+  /* --- the cue ------------------------------------------------------------- */
+  /* The cue hangs off the arrival's bottom edge, so it only shows where that
+     edge is on screen: wide enough for the two-column arrival, and tall
+     enough for the arrival to fit. Anywhere shorter it would point from
+     below the fold, and the ticket the fold slices is the affordance. */
+  .cue { display: none; }
+
+  @media (min-width: 64rem) and (min-height: 62rem) {
+    .cue { display: block; }
+  }
+
+  .cue-mark { animation: cue-drift 2.6s var(--ease-pop) infinite; }
+
   .cue:hover .cue-mark,
-  .cue:focus-visible .cue-mark {
-    animation: none;
-  }
+  .cue:focus-visible .cue-mark { animation: none; }
 
   @keyframes cue-drift {
     0% { transform: translateY(-0.4rem); opacity: 0; }
@@ -346,219 +600,279 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .cue-mark {
-      animation: none;
-    }
+    .cue-mark { animation: none; }
   }
 
-  /* Measure rule: a hairline with tick ends, as used to dimension a sheet */
-  .measure {
-    position: relative;
-    border-top: 1px solid var(--rule-strong);
-    height: 1px;
-  }
-
-  .measure::before,
-  .measure::after {
-    content: "";
-    position: absolute;
-    top: -4px;
-    width: 1px;
-    height: 9px;
-    background: var(--rule-strong);
-  }
-
-  .measure::before { inset-inline-start: 0; }
-  .measure::after { inset-inline-end: 0; }
-
-  /* Project entry: one project, listed as a catalogued item. The stack line
-     sets inside the same row so hover/focus covers the whole strip, not just
-     the title block above it — the strip is one hit target, not two. */
-  .project-row {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr;
-    grid-template-areas:
-      "num  title"
-      ".    meta"
-      ".    stack";
-    column-gap: 1rem;
-    row-gap: 0.75rem;
-    padding-block: clamp(1.5rem, 3.5vw, 2.25rem);
-    padding-inline: clamp(0.75rem, 2vw, 1.5rem);
-    border-top: 1px solid var(--rule);
-    text-decoration: none;
-    position: relative;
-    transition: background-color 220ms var(--ease-settle);
-  }
-
-  /* The catalogue is closed on both ends: every entry is ruled above, and the
-     last one is ruled below, so the table reads as a bounded object rather
-     than a list that trails off. */
-  li:last-child > .project-row {
-    border-bottom: 1px solid var(--rule);
-  }
-
-  @media (min-width: 60rem) {
-    .project-row {
-      grid-template-columns: 2.5rem minmax(0, 1fr) 19rem 10.5rem;
-      grid-template-areas:
-        "num  title desc meta"
-        ".    stack stack stack";
-      align-items: start;
-      column-gap: 2rem;
-      /* The stack line belongs to the title above it, not to the next entry:
-         hold it closer than the space that separates one entry from the next. */
-      row-gap: 0.625rem;
-    }
-  }
-
-  .project-row:hover,
-  .project-row:focus-visible {
-    background: var(--accent-wash);
-    outline-offset: 0;
-  }
-
-  /* Project titles stay steady while the row communicates its active state. */
-  .project-name {
-    font-size: clamp(1.875rem, 5.5vw, 3.25rem);
-    line-height: 0.95;
-    letter-spacing: -0.03em;
-    font-weight: 600;
-    font-variation-settings: "wdth" 100;
-  }
-
-  /* One decision. The first after a heading needs no rule of its own —
-     the heading already carries one. */
-  .decision {
-    margin-top: 2rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .decision + .decision {
-    border-top: 1px solid var(--rule-strong);
-    padding-top: 2rem;
-  }
-
-  /* Alternates: the showing of glyphs considered and not set.
-     This is how a Rejected Alternative renders. */
-  .alt {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0 0.875rem;
-    padding-block: 0.75rem;
-    color: var(--ink-muted);
-    align-items: baseline;
-  }
-
-  .alt-mark {
-    font-family: var(--font-mono);
-    font-size: var(--text-micro);
-    font-variation-settings: "wdth" 87.5, "wght" 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    border: 1px solid var(--rule);
-    padding: 0.125rem 0.375rem;
-    white-space: nowrap;
-  }
-
-  .alt-name {
-    text-decoration: line-through;
-    text-decoration-color: var(--rule-strong);
-    text-decoration-thickness: 1px;
-  }
-
-  /* Prose inside a case study, set to a reading measure */
-  .prose-spec {
+  /* --- reading measure ------------------------------------------------------ */
+  .reading {
     max-width: 68ch;
     font-size: var(--text-lead);
-    line-height: 1.65;
+    line-height: 1.62;
     color: var(--ink);
   }
 
-  .prose-spec > * + * { margin-top: 1.1em; }
+  .reading > * + * { margin-top: 1.1em; }
 
-  .prose-spec h2 {
-    font-size: clamp(1.375rem, 2.6vw, 1.875rem);
+  .reading h2 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
     letter-spacing: -0.025em;
-    margin-top: 2em;
-    margin-bottom: 0.6em;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--rule);
+    margin-top: 2.25em;
+    margin-bottom: 0.7em;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--ink);
   }
 
-  .prose-spec > h2:first-child {
-    margin-top: 0;
-    padding-top: 0;
-    border-top: 0;
-  }
+  .reading > h2:first-child { margin-top: 0; }
 
-  .prose-spec h3 {
-    font-size: 1.125rem;
+  .reading h3 {
+    font-size: 1.1875rem;
     margin-top: 1.75em;
     margin-bottom: 0.35em;
   }
 
-  .prose-spec a {
-    color: var(--accent-ink);
+  .reading a {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
     text-underline-offset: 0.2em;
-    text-decoration-thickness: 1px;
   }
 
-  .prose-spec code {
+  .reading a:hover {
+    background: var(--line-1);
+    text-decoration: none;
+  }
+
+  .reading code {
     font-family: var(--font-mono);
     font-size: 0.85em;
-    font-variation-settings: "wdth" 87.5;
-    background: var(--plate);
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
     padding: 0.1em 0.35em;
-    border: 1px solid var(--rule);
   }
 
-  .prose-spec pre {
+  .reading pre {
     font-family: var(--font-mono);
     font-size: 0.8125rem;
-    background: var(--plate);
-    border: 1px solid var(--rule);
+    background: var(--ink);
+    color: var(--paper);
     padding: 1rem;
     overflow-x: auto;
   }
 
-  .prose-spec pre code {
-    background: none;
-    border: 0;
-    padding: 0;
-  }
+  .reading pre code { background: none; padding: 0; }
 
-  .prose-spec ul:not(.alts) { padding-inline-start: 1.1em; list-style: none; }
-  .prose-spec ul:not(.alts) > li { position: relative; margin-top: 0.4em; }
-  .prose-spec ul:not(.alts) > li::before {
+  .reading ul { padding-inline-start: 1.1em; list-style: none; }
+  .reading ul > li { position: relative; margin-top: 0.4em; }
+  .reading ul > li::before {
     content: "";
     position: absolute;
     inset-inline-start: -1.1em;
     top: 0.72em;
     width: 0.5em;
-    height: 1px;
-    background: var(--rule-strong);
+    border-top: 2px solid var(--ink);
   }
 
-  /* Small square controls keep their drawn size on a mouse and grow to a
-     thumb-sized target on touch, where 36px is a miss. */
+  /* --- the Ask mark ------------------------------------------------------- */
+  /* A printed block pinned to the bottom corner, carrying the speech mark. It
+     is square, because rule 1 allows no radius anywhere — a round bubble would
+     be the one soft edge on the site. Yellow because the accent belongs to
+     what the reader can act on. */
+  .ask-dock {
+    position: fixed;
+    right: clamp(0.875rem, 2.5vw, 1.75rem);
+    bottom: clamp(0.875rem, 2.5vw, 1.75rem);
+    /* Under the fascia (z-40), over the sheet. */
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .ask-mark {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 3px solid var(--ink);
+    background: var(--line-1);
+    color: var(--ink);
+    box-shadow: 5px 5px 0 var(--ink);
+    transition:
+      translate 120ms var(--ease-pop),
+      box-shadow 120ms var(--ease-pop);
+  }
+
+  .ask-mark:hover,
+  .ask-mark:focus-visible {
+    translate: -2px -2px;
+    box-shadow: 7px 7px 0 var(--ink);
+    outline-offset: 0;
+  }
+
+  .ask-mark:active {
+    translate: 3px 3px;
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  /* The nudge: a paper plate beside the mark that stays printed once it has
+     appeared — the way in stays labelled. It names the mark through
+     aria-labelledby, so the label is in the accessibility tree regardless. It
+     composes .plate rather than restating it; the plate is a one-line label
+     and the nudge is a sentence, so only wrapping, leading, and the offset
+     that lifts it off the sheet depart from the primitive. */
+  .ask-nudge {
+    pointer-events: none;
+    max-width: 15ch;
+    box-shadow: 3px 3px 0 var(--ink);
+    white-space: normal;
+    line-height: 1.3;
+    text-wrap: balance;
+    animation: none;
+    opacity: 1;
+    translate: 0 0;
+    transition: translate 120ms var(--ease-pop);
+  }
+
+  /* The nudge travels with the mark: the pair lifts and presses as one
+     block, so the label reads as part of the same printed piece. */
+  .ask-dock:hover .ask-nudge,
+  .ask-dock:focus-within .ask-nudge {
+    translate: -2px -2px;
+  }
+
+  /* --- the bench: one Exchange, printed at page scale --------------------- */
+  /* The question is set at destination scale, the same size a project name
+     takes in the directory: on this surface the reader's own words are the
+     largest thing on the sheet. */
+  /* The question takes focus only so the answer is announced and scrolled to.
+     It is not in the tab order, so it prints no keyline — a rule inset in the
+     yellow block reads as a mistake, and the block is already the largest
+     thing on the sheet. */
+  .bench-question:focus,
+  .bench-question:focus-visible {
+    outline: none;
+  }
+
+  .bench-question {
+    font-size: var(--text-destination);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    font-weight: 800;
+    text-wrap: balance;
+  }
+
+  /* One Source: a rule-divided row naming the passage the answer stood on. */
+  .source-entry {
+    padding: 0.875rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .source-entry:first-of-type { border-top: 0; padding-top: 0; }
+
+  /* The composer. The field takes the kit's border and drops the browser's. */
+  /* The box and the send block are one row of two blocks, so they share one
+     height and read as a pair. `--composer-h` is that height: the field takes
+     it as a floor and grows past it with what is typed, the send block takes
+     it outright. The field's own type and padding are pinned rather than
+     fluid (53.5px at rest against a 56px floor), so the floor is what decides
+     the resting height at every viewport and the two can never disagree. */
+  .composer-field {
+    display: block;
+    width: 100%;
+    min-height: var(--composer-h);
+    resize: none;
+    padding: 0.6875rem 1rem;
+    border: 3px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 1.0625rem;
+    line-height: 1.5;
+    box-shadow: 4px 4px 0 var(--ink);
+    /* The reader's own mark lands here, so it prints in colour, not ink. */
+    caret-color: var(--line-2);
+  }
+
+  /* Taking focus is the press every other block already performs, and its rule
+     doubles against itself with no gap to read as a fault beside the hard
+     shadow. It is the row that lifts, not the box alone: the box and the send
+     block are one pair cut to one height, and lifting one would leave the
+     other two pixels adrift — the very misalignment the pairing prevents.
+
+     `--composer-h` is a floor, never a fixed height. `field-sizing: content`
+     counts the placeholder as content, so on a narrow bar the box legitimately
+     stands two lines tall before anything is typed. Pinning it to the floor
+     there would clip the placeholder, which is a worse fault than a box that
+     is taller than the block beside it: the pair stays bottom-aligned, which
+     is what makes the growth read as intended rather than as a mistake. */
+  .composer-field {
+    transition:
+      translate 120ms var(--ease-pop),
+      box-shadow 120ms var(--ease-pop);
+  }
+
+  .composer-field:focus-visible { outline-offset: 0; }
+
+  .composer-row:focus-within .composer-field,
+  .composer-row:focus-within .composer-send {
+    translate: -2px -2px;
+    box-shadow: 7px 7px 0 var(--ink);
+  }
+
+  /* The reader still gets the send block's own press when they reach for it. */
+  .composer-row .composer-send:active {
+    translate: 3px 3px;
+    box-shadow: 0 0 0 var(--ink);
+  }
+
+  .composer-field::placeholder {
+    color: var(--ink-muted);
+    opacity: 1;
+  }
+
+  /* The Exchange the bench is showing, marked in the strip. */
+  .chip[aria-current='true'] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* --- the chat's waiting mark -------------------------------------------- */
+  /* Three ink squares stepping in turn while a reply is outstanding. It is the
+     one loop besides `.cue-mark`, and unlike that one it is not decoration: it
+     exists only while the reader is waiting, and leaves with the answer. The
+     cycle ends where it starts, at full opacity, so the base reduced-motion
+     rule — which collapses an animation to its end state — leaves three solid
+     squares that still read as "working". */
+  .thinking-tick {
+    animation: thinking-step 1s var(--ease-pop) infinite;
+  }
+
+  @keyframes thinking-step {
+    0%, 100% { opacity: 1; translate: 0 0; }
+    50% { opacity: 0.25; translate: 0 -3px; }
+  }
+
+  /* --- the focus keyline on ink fills ------------------------------------ */
+  /* An ink rule cannot show on an ink fill, so a solid block takes its keyline
+     inside, in paper, just within the border. These sit last in the layer
+     because they tie with the .btn and .chip focus rules on specificity, and
+     source order is what decides a tie. */
+  .btn-solid:focus-visible,
+  .chip[aria-current='true']:focus-visible {
+    outline-color: var(--paper);
+    outline-offset: -6px;
+  }
+
+  /* On the ink field the solid block is the one printed in paper, so its
+     keyline reverses back to ink and prints inside. */
+  .on-ink .btn-solid:focus-visible {
+    outline-color: var(--ink);
+    outline-offset: -6px;
+  }
+
   @media (pointer: coarse) {
-    .touch-target {
-      min-width: 2.75rem;
-      min-height: 2.75rem;
-    }
+    .touch-target { min-width: 2.875rem; min-height: 2.875rem; }
   }
-
-  /* Actionable text. Accent only ever marks something the reader can do. */
-  .act {
-    color: var(--accent-ink);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
-    text-decoration-color: var(--accent);
-    transition: text-decoration-thickness 160ms var(--ease-settle);
-  }
-
-  .act:hover { text-decoration-thickness: 2px; }
 }

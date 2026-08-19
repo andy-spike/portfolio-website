@@ -1,0 +1,17 @@
+---
+import Arrival from './Arrival.astro';
+import Directory from './Directory.astro';
+import Cast from './Cast.astro';
+import About from './About.astro';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<Arrival locale={locale} />
+<Directory locale={locale} />
+<Cast locale={locale} />
+<About locale={locale} />

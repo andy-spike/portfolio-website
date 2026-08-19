@@ -2,134 +2,137 @@ export const locales = ['en', 'es'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'en';
 
-export const ui = {
-  en: {
-    'meta.title': 'Andrés Sanabria — Project No. 01',
-    'meta.description':
-      'Andrés Sanabria builds products with agents inside them. Three shipped, public projects, with the decisions and the alternatives behind each.',
-    'rail.lang': 'Language',
-    'rail.theme': 'Toggle plate',
-    'theme.light': 'Light',
-    'theme.dark': 'Dark',
-    'theme.system': 'System',
-    'nav.skipToContent': 'Skip to content',
-    'nav.primary': 'Primary navigation',
-    'nav.projects': 'Projects',
-    'nav.casts': 'Casts',
-    'nav.about': 'About',
-
-    'hero.description':
-      'I’m Andrés Sanabria, a developer in Bogotá building agent-native products: software where agents operate inside the product, not beside it.',
-
-    'about.heading': 'About',
-    'about.intro':
-      'I’m Andrés Sanabria, a developer based in Bogotá, Colombia. I build software and think about how the tools people use can work with agents as part of the product itself.',
-    'about.focus':
-      'My focus is agent-native products: software where an agent can work with the product’s own domain, rather than being added as a separate chat interface.',
-    'about.work':
-      'The projects here are public and shipped. You can inspect the source, read the decisions behind them, and see how the work behaves in use.',
-
-    'projects.heading': 'Projects',
-    'projects.read': 'Read the project',
-
-    'inUse.heading': 'Casts',
-    'inUse.caption':
-      'Dolphin driving a coding agent to generate a course, recorded from a real session. A project is worth little until it is shown working.',
-    'inUse.placeholder': 'Terminal cast — to be recorded',
-
-    'portrait.label': 'Portrait',
-    'portrait.placeholder': 'Portrait — to be added',
-
-    'availability': 'Available for full-time overlap with US working hours.',
-
-    'contact.github': 'Check my GitHub',
-    'contact.resume': 'CV',
-    'contact.linkedin': 'LinkedIn',
-    'contact.email': 'Email',
-    'contact.x': 'X (Twitter)',
-
-    'sheet.problem': 'Problem',
-    'sheet.decisions': 'Decisions',
-    'sheet.result': 'Result',
-    'sheet.chose': 'Set',
-    'sheet.rejected': 'Alternates not set',
-    'sheet.back': 'All projects',
-    'sheet.source': 'Source',
-    'sheet.live': 'Live',
-    'sheet.download': 'Download',
-    'sheet.role': 'Role',
-    'sheet.year': 'Year',
-    'sheet.stack': 'Set in',
-
-    'fallback.notice':
-      'This project has not been translated into Spanish yet. Showing the English version.',
+/**
+ * Copy grouped by section. Each entry holds both languages side by side,
+ * so one edit touches en and es together. The `satisfies` clause fails the
+ * build when a key misses a language.
+ */
+export const copy = {
+  'meta.title': {
+    en: 'Andrés Sanabria — AI Product Engineer',
+    es: 'Andrés Sanabria — Ingeniero de producto de IA',
+  },
+  'meta.description': {
+    en: 'Andrés Sanabria builds products with agents inside them. Three shipped projects and the decisions behind each.',
+    es: 'Andrés Sanabria construye productos con agentes por dentro. Tres proyectos publicados y las decisiones detrás de cada uno.',
   },
 
-  es: {
-    'meta.title': 'Andrés Sanabria — Proyecto N.º 01',
-    'meta.description':
-      'Andrés Sanabria construye productos con agentes por dentro. Tres proyectos publicados y públicos, con las decisiones y las alternativas detrás de cada uno.',
-    'rail.lang': 'Idioma',
-    'rail.theme': 'Invertir plancha',
-    'theme.light': 'Claro',
-    'theme.dark': 'Oscuro',
-    'theme.system': 'Sistema',
-    'nav.skipToContent': 'Saltar al contenido',
-    'nav.primary': 'Navegación principal',
-    'nav.projects': 'Proyectos',
-    'nav.casts': 'Grabaciones',
-    'nav.about': 'Sobre mí',
+  'rail.lang': { en: 'Language', es: 'Idioma' },
 
-    'hero.description':
-      'Soy Andrés Sanabria, desarrollador en Bogotá. Construyo productos nativos de agentes: software donde los agentes operan dentro del producto, no a su lado.',
+  'nav.skipToContent': { en: 'Skip to content', es: 'Saltar al contenido' },
+  'nav.primary': { en: 'Primary navigation', es: 'Navegación principal' },
+  'nav.projects': { en: 'Projects', es: 'Proyectos' },
+  'nav.casts': { en: 'Casts', es: 'Grabaciones' },
+  'nav.about': { en: 'About', es: 'Sobre mí' },
+  'nav.ask': { en: 'Ask', es: 'Pregunta' },
 
-    'about.heading': 'Sobre mí',
-    'about.intro':
-      'Soy Andrés Sanabria, desarrollador basado en Bogotá, Colombia. Construyo software y pienso en cómo las herramientas que usamos pueden trabajar con agentes como parte del producto mismo.',
-    'about.focus':
-      'Mi enfoque son los productos nativos de agentes: software donde un agente puede trabajar con el propio dominio del producto, en lugar de añadirse como una interfaz de chat separada.',
-    'about.work':
-      'Los proyectos de aquí son públicos y están publicados. Puedes inspeccionar el código, leer las decisiones detrás de ellos y ver cómo funcionan en uso.',
-
-    'projects.heading': 'Proyectos',
-    'projects.read': 'Leer el proyecto',
-
-    'inUse.heading': 'Grabaciones',
-    'inUse.caption':
-      'Dolphin dirigiendo un agente de código para generar un curso, grabado en una sesión real. Un proyecto vale poco hasta que se ve funcionando.',
-    'inUse.placeholder': 'Grabación de terminal — pendiente',
-
-    'portrait.label': 'Retrato',
-    'portrait.placeholder': 'Retrato — pendiente',
-
-    'availability':
-      'Disponible para una superposición de tiempo completo con el horario laboral de EE. UU.',
-
-    'contact.github': 'Mira mi GitHub',
-    'contact.resume': 'CV',
-    'contact.linkedin': 'LinkedIn',
-    'contact.email': 'Correo',
-    'contact.x': 'X (Twitter)',
-
-    'sheet.problem': 'Problema',
-    'sheet.decisions': 'Decisiones',
-    'sheet.result': 'Resultado',
-    'sheet.chose': 'Compuesta',
-    'sheet.rejected': 'Alternativas descartadas',
-    'sheet.back': 'Todos los proyectos',
-    'sheet.source': 'Código',
-    'sheet.live': 'En vivo',
-    'sheet.download': 'Descargar',
-    'sheet.role': 'Rol',
-    'sheet.year': 'Año',
-    'sheet.stack': 'Compuesto en',
-
-    'fallback.notice':
-      'Este proyecto aún no está traducido al español. Se muestra la versión en inglés.',
+  'hero.description': {
+    en: 'I’m Andrés Sanabria, a developer in Bogotá. Three shipped products, and the decisions behind each.',
+    es: 'Soy Andrés Sanabria, desarrollador en Bogotá. Tres productos publicados, y las decisiones detrás de cada uno.',
   },
-} as const;
 
-export type UIKey = keyof (typeof ui)['en'];
+  'about.heading': { en: 'About', es: 'Sobre mí' },
+  'about.intro': {
+    en: 'I’m a developer in Bogotá, Colombia.',
+    es: 'Soy desarrollador en Bogotá, Colombia.',
+  },
+  'about.focus': {
+    en: 'I build agent-native products — software where an agent works inside the product, on its own data.',
+    es: 'Construyo productos nativos de agentes: software donde un agente trabaja dentro del producto, sobre sus propios datos.',
+  },
+  'about.work': {
+    en: 'The three projects below are public and shipped. Open the source and read the decisions, including the options I rejected.',
+    es: 'Los tres proyectos de abajo son públicos y están publicados. Abre el código y lee las decisiones, incluidas las opciones que descarté.',
+  },
+
+  'projects.heading': { en: 'Projects', es: 'Proyectos' },
+  'projects.read': { en: 'Open the case study', es: 'Abrir el caso de estudio' },
+
+  'arrival.shipped': { en: 'Shipped', es: 'Publicado' },
+
+  'inUse.heading': { en: 'Casts', es: 'Grabaciones' },
+  'inUse.placeholder': { en: 'Cast — to be added', es: 'Grabación — pendiente' },
+  'inUse.previous': { en: 'Previous cast', es: 'Grabación anterior' },
+  'inUse.next': { en: 'Next cast', es: 'Siguiente grabación' },
+
+  'ask.meta.title': { en: 'Ask — Andrés Sanabria', es: 'Pregunta — Andrés Sanabria' },
+  'ask.meta.description': {
+    en: 'Ask about the projects, the decisions behind them, and how they are built. The agent answers from a fixed corpus and says so when nothing in it supports an answer.',
+    es: 'Pregunta sobre los proyectos, las decisiones detrás de ellos y cómo están construidos. El agente responde desde un corpus fijo y lo dice cuando nada en él sustenta una respuesta.',
+  },
+  'ask.mark': { en: 'Ask about my work', es: 'Pregunta sobre mi trabajo' },
+  'ask.lead': {
+    en: 'The Agent answers from a fixed Corpus about my work. Each answer lists its Sources. If the Corpus does not support an answer, the Agent says so.',
+    es: 'El agente responde desde un corpus fijo sobre mi trabajo. Cada respuesta enumera sus fuentes. Si el corpus no sustenta una respuesta, el agente lo dice.',
+  },
+  'ask.answer': { en: 'Answer', es: 'Respuesta' },
+  'ask.composerLabel': { en: 'Your question', es: 'Tu pregunta' },
+  'ask.placeholder': { en: 'What did you decide against, and why?', es: '¿Qué descartaste, y por qué?' },
+  'ask.send': { en: 'Ask', es: 'Preguntar' },
+  'ask.error': { en: 'Type a question first', es: 'Escribe una pregunta primero' },
+  'ask.sources': { en: 'Sources', es: 'Fuentes' },
+  'ask.noSources': {
+    en: 'No Source in the Corpus supported this answer',
+    es: 'Ninguna fuente del corpus sustenta esta respuesta',
+  },
+  'ask.failed': {
+    en: 'The Agent could not answer. Try again.',
+    es: 'El agente no pudo responder. Inténtalo de nuevo.',
+  },
+  'ask.rateLimited': {
+    en: 'Too many questions at once. Wait a minute and ask again.',
+    es: 'Demasiadas preguntas seguidas. Espera un minuto y vuelve a preguntar.',
+  },
+  'ask.earlier': { en: 'Earlier', es: 'Anteriores' },
+  'ask.back': { en: 'Back to the site', es: 'Volver al sitio' },
+  'ask.toBottom': { en: 'Jump to the latest reply', es: 'Ir a la última respuesta' },
+  'ask.newChat': { en: 'New chat', es: 'Nueva conversación' },
+  'ask.you': { en: 'You', es: 'Tú' },
+  'ask.agent': { en: 'Agent', es: 'Agente' },
+  'ask.thinking': { en: 'Thinking', es: 'Pensando' },
+  'ask.emptyHeading': { en: 'Ask about my work.', es: 'Pregunta sobre mi trabajo.' },
+  'ask.hint': { en: 'Enter to send · Shift + Enter for a new line', es: 'Enter para enviar · Shift + Enter para una línea nueva' },
+  'ask.seedHeading': { en: 'Start with a question', es: 'Empieza con una pregunta' },
+  'ask.seed1': { en: 'How is Dolphin different from a coding assistant?', es: '¿En qué se diferencia Dolphin de un asistente de código?' },
+  'ask.seed2': { en: 'Why does Armin ship an MCP server?', es: '¿Por qué Armin incluye un servidor MCP?' },
+  'ask.seed3': { en: 'Which of these can I run myself today?', es: '¿Cuál de estos puedo ejecutar yo hoy?' },
+  'ask.seed4': { en: 'What did Citadela get wrong first?', es: '¿Qué hizo mal Citadela al principio?' },
+
+  'portrait.label': { en: 'Portrait', es: 'Retrato' },
+  'portrait.placeholder': { en: 'Portrait — to be added', es: 'Retrato — pendiente' },
+
+  availability: {
+    en: 'Available full-time, aligned with US working hours.',
+    es: 'Disponible a tiempo completo, alineado con el horario laboral de EE. UU.',
+  },
+
+  'contact.github': { en: 'Open my GitHub', es: 'Abre mi GitHub' },
+  'contact.resume': { en: 'CV', es: 'CV' },
+  'contact.resumePending': { en: 'CV — to be added', es: 'CV — pendiente' },
+  'contact.linkedin': { en: 'LinkedIn', es: 'LinkedIn' },
+  'contact.email': { en: 'Email', es: 'Correo' },
+  'contact.x': { en: 'X (Twitter)', es: 'X (Twitter)' },
+
+  'sheet.problem': { en: 'Problem', es: 'Problema' },
+  'sheet.decisions': { en: 'Decisions', es: 'Decisiones' },
+  'sheet.result': { en: 'Result', es: 'Resultado' },
+  'sheet.chose': { en: 'Chose', es: 'Elección' },
+  'sheet.rejected': { en: 'Turned down', es: 'Descartado' },
+  'sheet.back': { en: 'All projects', es: 'Todos los proyectos' },
+  'sheet.source': { en: 'Source', es: 'Código' },
+  'sheet.live': { en: 'Live', es: 'En vivo' },
+  'sheet.download': { en: 'Download', es: 'Descargar' },
+  'sheet.role': { en: 'Role', es: 'Rol' },
+  'sheet.year': { en: 'Year', es: 'Año' },
+  'sheet.stack': { en: 'Built with', es: 'Construido con' },
+
+  'fallback.notice': {
+    en: 'This project has not been translated into Spanish yet. Showing the English version.',
+    es: 'Este proyecto aún no está traducido al español. Se muestra la versión en inglés.',
+  },
+} satisfies Record<string, { en: string; es: string }>;
+
+export type UIKey = keyof typeof copy;
 
 /**
  * The showing, split into runs so one word can carry the accent.
@@ -139,14 +142,14 @@ export type ShowingRun = { text: string; emphasis?: true };
 
 export const showingLine: Record<Locale, ShowingRun[]> = {
   en: [
-    { text: 'I build products with ' },
-    { text: 'agents', emphasis: true },
-    { text: ' inside them.' },
+    { text: 'I build web products with ' },
+    { text: 'AI agents', emphasis: true },
+    { text: ' built-in.' },
   ],
   es: [
-    { text: 'Construyo productos con ' },
-    { text: 'agentes', emphasis: true },
-    { text: ' por dentro.' },
+    { text: 'Construyo productos web con ' },
+    { text: 'agentes de IA', emphasis: true },
+    { text: ' integrados.' },
   ],
 };
 
@@ -157,7 +160,7 @@ export function showingText(locale: Locale): string {
 
 export function useTranslations(locale: Locale) {
   return function t(key: UIKey): string {
-    return (ui[locale] as Record<string, string>)[key] ?? ui[defaultLocale][key];
+    return copy[key][locale];
   };
 }
 

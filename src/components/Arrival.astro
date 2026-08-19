@@ -1,0 +1,57 @@
+---
+import { useTranslations, showingLine, type Locale } from '../i18n/ui';
+import ExitBar from './ExitBar.astro';
+import Portrait from './Portrait.astro';
+import { ArrowDown } from 'lucide-react';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const line = showingLine[locale];
+---
+
+{/*
+  The arrival: one printed block carrying the whole first viewport — the
+  claim at block-letter scale, and the portrait framed in its own window.
+*/}
+<section class="relative flex flex-col">
+  <div class="span pb-[clamp(2rem,4vh,3rem)] pt-[clamp(1.25rem,3vh,3.5rem)]">
+    <div class="brick grid items-center gap-x-12 gap-y-10 px-[clamp(1.5rem,4vw,3rem)] py-[clamp(1.5rem,4vh,3rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,17rem)]">
+      <div class="min-w-0">
+        <h1 class="claim">
+          {
+            line.map((run) =>
+              run.emphasis ? <span class="claim-mark">{run.text}</span> : run.text
+            )
+          }
+        </h1>
+
+        <p class="ink-muted mt-[clamp(1.25rem,2.6vh,2rem)] max-w-[46ch] text-lead">
+          {t('hero.description')}
+        </p>
+
+        <div class="mt-[clamp(1.5rem,3.4vh,2.5rem)]">
+          <ExitBar locale={locale} />
+        </div>
+      </div>
+
+      <div class="max-w-[8.5rem] -rotate-1 lg:max-w-none">
+        <Portrait locale={locale} />
+      </div>
+    </div>
+  </div>
+
+  {/*
+    The cue hangs off the arrival's own bottom edge, so it only points from
+    somewhere the reader can see when the arrival fits the viewport. `.cue`
+    owns that gate — see the kit.
+  */}
+  <a href="#projects" aria-label={t('nav.projects')} class="cue absolute inset-x-0 bottom-3 mx-auto w-fit">
+    <span class="chip">
+      <ArrowDown size={20} strokeWidth={2.5} className="cue-mark size-5" aria-hidden="true" />
+    </span>
+  </a>
+</section>

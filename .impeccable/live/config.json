@@ -1,0 +1,7 @@
+{
+  "files": ["src/layouts/Base.astro"],
+  "exclude": ["scripts/og-card.html"],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}

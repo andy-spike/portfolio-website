@@ -9,28 +9,28 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 
-<div class="w-full max-w-[16rem] border border-rule bg-ground lg:max-w-none">
-  <div class="flex items-center justify-between border-b border-rule px-2.5 py-1.5">
-    <span class="rail">andrés</span>
-    <span class="rail text-ink-faint">{t('portrait.label')}</span>
-  </div>
+{/* The portrait window: an ink-barred frame, part of the print stack. */}
+<figure class="m-0 window">
+  <figcaption class="window-bar">
+    <span class="legend">{t('portrait.label')}</span>
+    <span class="legend" aria-hidden="true">01</span>
+  </figcaption>
 
   {
     CONTACT.portraitIsPlaceholder ? (
       /* Reserved position. Drop the headshot at public/portrait.jpg and set
-         CONTACT.portraitIsPlaceholder to false — it sets in place of this plate. */
-      <div class="flex aspect-[4/3] w-full flex-col items-center justify-center gap-4 px-6 text-center">
-        <span class="measure w-16" />
-        <span class="rail rail-strong">{t('portrait.placeholder')}</span>
+         CONTACT.portraitIsPlaceholder to false — it sets in place of this. */
+      <div class="hatched flex aspect-square w-full items-end p-2.5 text-ink lg:aspect-[4/5] lg:p-3">
+        <span class="legend max-w-[14ch] leading-snug">{t('portrait.placeholder')}</span>
       </div>
     ) : (
       <img
         src={CONTACT.portrait}
         alt={CONTACT.name}
         width="480"
-        height="640"
-        class="aspect-[4/3] w-full object-cover"
+        height="600"
+        class="aspect-square w-full object-cover lg:aspect-[4/5]"
       />
     )
   }
-</div>
+</figure>

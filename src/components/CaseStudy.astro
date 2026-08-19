@@ -1,0 +1,110 @@
+---
+import { render } from 'astro:content';
+import { useTranslations, localePath, type Locale } from '../i18n/ui';
+import { lineToken, splitId, type Project } from '../lib/projects';
+import Decision from './Decision.astro';
+import Cast from './Cast.astro';
+import Arrow from './Arrow.astro';
+import BrandIcon from './BrandIcon.astro';
+
+interface Props {
+  locale: Locale;
+  entry: Project;
+  isFallback: boolean;
+}
+
+const { locale, entry, isFallback } = Astro.props;
+const t = useTranslations(locale);
+const { Content } = await render(entry);
+const d = entry.data;
+const line = lineToken(d.order);
+const slug = splitId(entry.id).slug;
+
+/** `mark` names the destination where it has a mark of its own; the rest carry only the out-arrow. */
+const externals = [
+  { label: t('sheet.source'), href: d.links.source, mark: 'github' as const },
+  d.links.live ? { label: t('sheet.live'), href: d.links.live } : null,
+  d.links.download ? { label: t('sheet.download'), href: d.links.download } : null,
+].filter(Boolean) as Array<{ label: string; href: string; mark?: 'github' }>;
+
+const facts = [
+  { label: t('sheet.role'), value: d.role },
+  { label: t('sheet.year'), value: d.year },
+  { label: t('sheet.stack'), value: d.stack.join(', ') },
+];
+---
+
+<article>
+  {/* The title block: the project's own colour, printed as the sheet's
+      largest block. Black ink on colour, always. */}
+  <div class="span span-trim pt-[clamp(2rem,5vw,3.5rem)]">
+    <div class="brick" style={`--row-color: ${line}; background: var(--row-color);`}>
+      <div class="p-[clamp(1.5rem,4vw,3rem)]">
+        <a
+          href={localePath(locale, '/')}
+          class="plate no-underline transition-colors duration-100 hover:bg-ink hover:text-paper"
+        >
+          <Arrow dir="right" class="size-3.5 rotate-180" />
+          {t('sheet.back')}
+        </a>
+
+        <div class="mt-[clamp(1.25rem,3vw,2rem)] flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+          <h1 class="text-[length:var(--text-plate)] font-extrabold leading-[0.92] tracking-[-0.035em]">
+            {d.title}
+          </h1>
+          <span class="plate rotate-2">{d.state}</span>
+        </div>
+
+        <p class="mt-5 max-w-[52ch] text-lead font-medium">{d.character}</p>
+      </div>
+    </div>
+  </div>
+
+  {
+    isFallback && (
+      <div class="span span-trim pt-6">
+        <p class="border-[3px] border-ink bg-line-1 px-4 py-3 text-[0.9375rem] font-bold text-ink">
+          {t('fallback.notice')}
+        </p>
+      </div>
+    )
+  }
+
+  <Cast locale={locale} activeSlug={slug} />
+
+  <div class="span span-trim grid gap-x-12 gap-y-10 pb-[clamp(3.5rem,8vw,6rem)] pt-[clamp(2.5rem,5vw,3.5rem)] lg:grid-cols-[minmax(0,1fr)_15rem]">
+    <div class="reading order-2 lg:order-1">
+      <Content components={{ Decision }} />
+    </div>
+
+    <aside class="order-1 self-start lg:order-2 lg:sticky lg:top-[calc(var(--fascia-h)+2rem)]">
+      <dl class="m-0 border-[3px] border-ink bg-paper shadow-[4px_4px_0_var(--ink)]">
+        {
+          facts.map((f, i) => (
+            <div class:list={['px-4 py-3', i > 0 && 'border-t-2 border-rule']}>
+              <dt class="legend">{f.label}</dt>
+              <dd class="m-0 mt-1.5 text-[0.9375rem] leading-snug text-ink">{f.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="mt-6 flex flex-col items-start gap-2.5">
+        {
+          externals.map((link) => (
+            <a
+              href={link.href}
+              class="btn text-[0.875rem]"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {link.mark === 'github' && <BrandIcon name="github" class="size-3.5" />}
+              {link.label}
+              <Arrow dir="out" class="size-3" />
+            </a>
+          ))
+        }
+      </div>
+    </aside>
+  </div>
+</article>

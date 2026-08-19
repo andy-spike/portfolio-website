@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Sheet from '../../components/Sheet.astro';
+import CaseStudy from '../../components/CaseStudy.astro';
 import { getProjects } from '../../lib/projects';
 
 export async function getStaticPaths() {
@@ -22,5 +22,5 @@ const { slug } = Astro.params;
   title={`${entry.data.title} — Andrés Sanabria`}
   description={entry.data.character}
 >
-  <Sheet locale="en" entry={entry} isFallback={isFallback} />
+  <CaseStudy locale="en" entry={entry} isFallback={isFallback} />
 </Base>

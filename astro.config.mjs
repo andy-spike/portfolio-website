@@ -8,8 +8,7 @@ import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
-  // PLACEHOLDER: replace with the real domain once bought.
-  site: "https://andressanabria.dev",
+  site: "https://ansanabria.dev/",
   adapter: vercel({
     webAnalytics: {
       enabled: true,

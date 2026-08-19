@@ -1,0 +1,135 @@
+---
+import { useTranslations, type Locale } from '../i18n/ui';
+import { getProjects } from '../lib/projects';
+import SignHead from './SignHead.astro';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  locale: Locale;
+  /** Focus the carousel on this project's slug on load. Defaults to the first project. */
+  activeSlug?: string;
+  heading?: string;
+}
+const { locale, activeSlug, heading } = Astro.props;
+const t = useTranslations(locale);
+
+const projects = await getProjects(locale);
+const items = projects.map(({ slug, entry }) => ({
+  slug,
+  title: entry.data.title,
+  cast: entry.data.cast,
+  caption: entry.data.character,
+}));
+const startIndex = Math.max(
+  0,
+  items.findIndex((item) => item.slug === activeSlug)
+);
+
+/** A YouTube watch/share/short URL, reduced to its privacy-enhanced embed URL. */
+function embedUrl(url: string): string | null {
+  const id = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/)?.[1];
+  return id ? `https://www.youtube-nocookie.com/embed/${id}` : null;
+}
+---
+
+{/*
+  The service display: the one place the work is shown running rather than
+  described, framed in an ink-barred window with its own title plate. One
+  Terminal Cast per project; the reader steps between them with the arrows.
+*/}
+<section
+  id="casts"
+  aria-labelledby="casts-heading"
+  class="span scroll-mt-[var(--fascia-h)]"
+>
+  <div class="py-[clamp(3rem,7vw,5rem)]">
+    <SignHead id="casts-heading" heading={heading ?? t('inUse.heading')} />
+
+    <figure
+      class="m-0 mt-[clamp(2rem,4vw,3rem)] grid gap-x-12 gap-y-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end"
+      data-cast-root
+    >
+      <div class="window min-w-0">
+        <div class="window-bar">
+          <span class="legend" data-cast-title>{items[startIndex].title}</span>
+          {items.length > 1 && (
+            <span class="legend" data-cast-position>
+              {String(startIndex + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
+            </span>
+          )}
+        </div>
+
+        {
+          items.map((item, i) => {
+            const src = item.cast ? embedUrl(item.cast) : null;
+            return (
+              <div data-cast-panel data-title={item.title} data-caption={item.caption} hidden={i !== startIndex}>
+                {src ? (
+                  <iframe
+                    class="aspect-[16/10] w-full"
+                    src={src}
+                    title={item.title}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                  />
+                ) : (
+                  <div class="hatched flex aspect-[16/10] w-full items-end p-4 text-ink">
+                    <span class="legend max-w-[22ch] leading-snug">{t('inUse.placeholder')}</span>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        }
+      </div>
+
+      <figcaption class="ink-muted text-lead">
+        <p class="max-w-[38ch]" data-cast-caption>
+          {items[startIndex].caption}
+        </p>
+
+        {
+          items.length > 1 && (
+            <div class="mt-4 flex items-center gap-2">
+              <button type="button" class="chip" data-cast-prev aria-label={t('inUse.previous')}>
+                <Arrow dir="right" class="size-3.5 rotate-180" />
+              </button>
+              <button type="button" class="chip" data-cast-next aria-label={t('inUse.next')}>
+                <Arrow dir="right" class="size-3.5" />
+              </button>
+            </div>
+          )
+        }
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-cast-root]')) {
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-cast-panel]')];
+    if (panels.length < 2) continue;
+
+    const titles = panels.map((p) => p.dataset.title ?? '');
+    const captions = panels.map((p) => p.dataset.caption ?? '');
+    const titleEl = root.querySelector<HTMLElement>('[data-cast-title]');
+    const positionEl = root.querySelector<HTMLElement>('[data-cast-position]');
+    const captionEl = root.querySelector<HTMLElement>('[data-cast-caption]');
+    let index = panels.findIndex((p) => !p.hidden);
+
+    function show(next: number) {
+      panels[index].hidden = true;
+      index = (next + panels.length) % panels.length;
+      panels[index].hidden = false;
+      if (titleEl) titleEl.textContent = titles[index];
+      if (positionEl) {
+        positionEl.textContent = `${String(index + 1).padStart(2, '0')} / ${String(panels.length).padStart(2, '0')}`;
+      }
+      if (captionEl) captionEl.textContent = captions[index];
+    }
+
+    root.querySelector('[data-cast-prev]')?.addEventListener('click', () => show(index - 1));
+    root.querySelector('[data-cast-next]')?.addEventListener('click', () => show(index + 1));
+  }
+</script>

@@ -1,0 +1,84 @@
+{
+  "title": "impeccable · the Ask surface",
+  "question": "The roll dealt three compositions for the Ask surface (seed 36013237). The print world is already settled — warm paper, 3px ink borders, hard offset shadows, no radius and no blur — so this choice is structure, not identity. The surface's job is evidence: the Agent is the fourth piece of shipped work, and the Source it cites is the load-bearing element. Lock one.",
+  "options": [
+    {
+      "id": "bench",
+      "label": "The Bench",
+      "kicker": "THE ROLL",
+      "lineage": "a printed page, replaced sheet by sheet",
+      "thesis": "An answer is a printed page, not a message — so the surface prints one at a time, at full scale.",
+      "palette": ["#F6F1E7", "#FFFDF6", "#16130D", "#F5B301"],
+      "materials": ["3px ink border", "hard offset shadow", "Azeret Mono legends"],
+      "viewport": "No scrollback. The question sets at destination scale across the sheet's largest brick; the answer runs beneath it at reading measure, and a sticky aside — the same panel a Case Study uses for its facts — names every Source the answer stood on. Earlier questions collect as a strip of numbered mono chips along the bottom edge.",
+      "case": "Strongest on the evidence job: the Source aside is permanent furniture rather than a footnote, so grounding is visible before you read a word of the answer.",
+      "risk": "A reader trained on chat will hunt for scrollback before they find the chip strip. The stepper has to read as navigation on first sight.",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "x": 0, "y": 0, "w": 12, "h": 0.8, "label": "fascia" },
+          { "x": 0, "y": 1.2, "w": 8, "h": 2.6, "label": "the question · destination scale", "accent": true },
+          { "x": 0, "y": 4.2, "w": 8, "h": 4.2, "label": "the answer · reading measure" },
+          { "x": 8.4, "y": 1.2, "w": 3.6, "h": 5.2, "label": "sources · sticky aside" },
+          { "x": 8.4, "y": 6.8, "w": 3.6, "h": 3.2, "label": "earlier questions · chips" },
+          { "x": 0, "y": 8.8, "w": 8, "h": 1.2, "label": "ask" }
+        ]
+      }
+    },
+    {
+      "id": "switchboard",
+      "label": "The Switchboard",
+      "lineage": "the Arrival's colour-chipped project tickets",
+      "thesis": "A hiring manager with three minutes does not know what to ask — so the board asks for them.",
+      "palette": ["#F6F1E7", "#F5B301", "#F4602A", "#2FBFAE"],
+      "materials": ["ticket fill on lift", "colour chip", "2px plate"],
+      "viewport": "A board of real questions, each one a ticket that fills with a project's colour as it lifts, exactly like the project tickets on Home. Clicking a ticket opens its answer in place with a horizontal strip of Source cards beneath it. The composer sits under the board for anything not already on it.",
+      "case": "Best first-viewport legibility of the three, and it reuses a primitive the site already owns, so it costs the least new vocabulary.",
+      "risk": "Browse-first framing makes a live Agent look like a canned FAQ — the exact opposite of the evidence job you picked.",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "x": 0, "y": 0, "w": 12, "h": 0.8, "label": "fascia" },
+          { "x": 0, "y": 1, "w": 12, "h": 1, "label": "ask · sign head" },
+          { "x": 0, "y": 2.3, "w": 5.8, "h": 1.2, "label": "question 01", "accent": true },
+          { "x": 6.2, "y": 2.3, "w": 5.8, "h": 1.2, "label": "02" },
+          { "x": 0, "y": 3.8, "w": 5.8, "h": 1.2, "label": "03" },
+          { "x": 6.2, "y": 3.8, "w": 5.8, "h": 1.2, "label": "04" },
+          { "x": 0, "y": 5.3, "w": 5.8, "h": 1.2, "label": "05" },
+          { "x": 6.2, "y": 5.3, "w": 5.8, "h": 1.2, "label": "06" },
+          { "x": 0, "y": 6.9, "w": 12, "h": 1.9, "label": "opens in place · source strip" },
+          { "x": 0, "y": 9, "w": 12, "h": 1, "label": "ask anything else" }
+        ]
+      }
+    },
+    {
+      "id": "transcript",
+      "label": "The Transcript",
+      "lineage": "the chat column every AI portfolio ships",
+      "thesis": "The arrangement the reader already knows, executed in this kit without irony.",
+      "palette": ["#F6F1E7", "#FFFDF6", "#16130D", "#F5B301"],
+      "materials": ["paper brick", "ink-bordered composer", "source plate"],
+      "viewport": "Question bricks and answer bricks stacked down one column, each answer footed by a Source plate, the composer docked at the bottom as an ink-bordered bar that presses when you send.",
+      "case": "Zero learning cost and the only one of the three that stays comfortable after twenty exchanges. Honest, and honestly the default.",
+      "risk": "It is what every AI portfolio ships, so the Agent reads as a bolted-on widget — and About already promises the opposite: agents that work with a product's own domain 'rather than being bolted on as a separate chat interface.'",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "x": 0, "y": 0, "w": 12, "h": 0.8, "label": "fascia" },
+          { "x": 5, "y": 1.1, "w": 7, "h": 1.1, "label": "question" },
+          { "x": 0, "y": 2.4, "w": 9, "h": 2, "label": "answer" },
+          { "x": 0, "y": 4.6, "w": 5, "h": 0.7, "label": "source", "accent": true },
+          { "x": 5, "y": 5.6, "w": 7, "h": 1, "label": "question" },
+          { "x": 0, "y": 6.8, "w": 9, "h": 1.7, "label": "answer" },
+          { "x": 0, "y": 8.9, "w": 12, "h": 1.1, "label": "composer · docked" }
+        ]
+      }
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "steer": true,
+  "buildPath": { "value": "code", "toggle": false }
+}
