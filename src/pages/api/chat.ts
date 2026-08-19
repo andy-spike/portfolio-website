@@ -10,6 +10,7 @@ import {
 } from 'astro:env/server';
 import { CORPUS_LOCALE, EMBEDDING_MODEL } from '../../lib/corpus';
 import { frame } from '../../lib/ask-stream';
+import { scrub } from '../../lib/scrub';
 import { locales, type Locale } from '../../i18n/ui';
 
 /** The one route on the site that is not prerendered. */
@@ -154,7 +155,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       (row) => row.similarity >= MIN_SIMILARITY
     );
   } catch (cause) {
-    console.error('Ask: the Agent could not be reached', cause);
+    const detail = cause instanceof Error ? cause.message : String(cause);
+    console.error('Ask: the Agent could not be reached —', scrub(detail));
     return bad('The Agent is unavailable', 503);
   }
 
