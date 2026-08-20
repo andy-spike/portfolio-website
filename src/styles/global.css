@@ -1,7 +1,9 @@
 @import "tailwindcss";
+@source "../../node_modules/streamdown/dist/*.js";
 
 @import "@fontsource-variable/bricolage-grotesque/standard.css";
 @import "@fontsource-variable/azeret-mono";
+@import "streamdown/styles.css";
 
 /* ---------------------------------------------------------------------------
    PRINT-SHOP KIT — tokens

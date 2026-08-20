@@ -1,6 +1,31 @@
+import { Streamdown, type Components } from 'streamdown';
 import { cn } from '@/lib/utils';
 import { searchInFlight, sourcesFor, textOf } from './transcript';
 import type { AskMessage, ChatStrings, Source } from './types';
+
+/**
+ * The Agent's prose runs through `.reading`, the same measure the case
+ * studies print in — so an answer looks like a passage of the site, not a
+ * chat bubble. Streamdown ships its own Tailwind classes on these tags,
+ * which would fight the kit's cascade, so the elements that carry
+ * typography are handed back bare and `.reading` styles them instead. Code
+ * and tables stay on Streamdown's own components: the shadcn bridge in
+ * global.css already points their tokens at the kit's ink and paper.
+ */
+const proseComponents: Components = {
+  p: ({ node: _node, ...props }) => <p {...props} />,
+  a: ({ node: _node, ...props }) => <a target="_blank" rel="noreferrer" {...props} />,
+  strong: ({ node: _node, ...props }) => <strong {...props} />,
+  em: ({ node: _node, ...props }) => <em {...props} />,
+  h1: ({ node: _node, ...props }) => <h2 {...props} />,
+  h2: ({ node: _node, ...props }) => <h2 {...props} />,
+  h3: ({ node: _node, ...props }) => <h3 {...props} />,
+  ul: ({ node: _node, ...props }) => <ul {...props} />,
+  ol: ({ node: _node, ...props }) => <ol {...props} />,
+  li: ({ node: _node, ...props }) => <li {...props} />,
+  blockquote: ({ node: _node, ...props }) => <blockquote {...props} />,
+  hr: ({ node: _node, ...props }) => <hr {...props} />,
+};
 
 interface Props {
   messages: AskMessage[];
@@ -49,7 +74,9 @@ export function Message({ messages, index, strings, busy, failed }: Props) {
           is the surface's honest system state, not a spinner.
         */}
         {text ? (
-          <p className="text-[1.0625rem] leading-relaxed whitespace-pre-wrap">{text}</p>
+          <Streamdown className="reading max-w-none" components={proseComponents}>
+            {text}
+          </Streamdown>
         ) : search ? (
           <Working
             label={
@@ -90,20 +117,21 @@ function Sources({
   strings: ChatStrings;
 }) {
   if (!list.length) {
-    return <span className="plate ml-1">{strings.noSources}</span>;
+    return <span className="plate ml-1 mt-4">{strings.noSources}</span>;
   }
 
   return (
-    <p className="legend ml-1 max-w-[min(46rem,88%)]">
-      <span className="legend-strong">
+    <div className="ml-1 mt-4 flex max-w-[min(46rem,88%)] flex-wrap items-center gap-x-2 gap-y-1.5">
+      <span className="legend legend-strong">
         {inherited ? strings.sourcesInherited : strings.sources}
       </span>
       {list.map((source) => (
-        <span key={`${source.file}/${source.title}`} className="ml-2.5 whitespace-nowrap">
-          {source.file} — {source.title}
+        <span key={`${source.file}/${source.title}`} className="plate gap-1.5">
+          <span>{source.file}</span>
+          <span className="ink-muted font-normal">{source.title}</span>
         </span>
       ))}
-    </p>
+    </div>
   );
 }
 
