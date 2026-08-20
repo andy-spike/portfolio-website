@@ -34,7 +34,7 @@ The Screener arrives needing an artifact to attach to an internal message. Faili
 
 ## Capabilities and Constraints
 
-- Five surfaces: Home, one Case Study each for Dolphin, Armin, and Citadela, and Ask. No other pages.
+- Five surfaces: Home, one Case Study each for Dolphin, Armin, and Ask, and the Ask surface itself. No other pages.
 - Content is authored by Andrés, in a fixed Case Study shape: Problem, Decisions, Rejected Alternatives, Result.
 - English and Spanish. Spanish is a genuine market requirement, not a nicety. A missing Spanish translation must fall back to English, never 404.
 - One embedded Terminal Cast (Dolphin driving a coding agent), replayed from a local recording.
@@ -52,9 +52,9 @@ The Screener arrives needing an artifact to attach to an internal message. Faili
 
 Real, verifiable, and public:
 
-- **Dolphin** — `github.com/andy-spike/dolphin`. ~21k lines of TypeScript across a TUI, a Cloudflare Workers course-service, and a web app. Carries a rigorous domain model in `CONTEXT.md`. The Flagship.
+- **Dolphin** — `github.com/andy-spike/dolphin`. ~21k lines of TypeScript across a web app and a Cloudflare Workers course-service. Carries a rigorous domain model in `CONTEXT.md`. The Flagship.
 - **Armin** — `github.com/andy-spike/armin`. Local-first spaced-repetition desktop app using FSRS. Ships an MCP server at `apps/desktop/src/mcp/` with tests. Released publicly as an AppImage, CI and release workflows in place.
-- **Citadela** — `github.com/andy-spike/citadela`. Peer-to-peer tutoring marketplace for Bogotá universities. Next.js, Convex, Better Auth, payments and scheduling. Deployed and public.
+- **Ask** — the agent on this site, live at `/ask`, answering questions about Andrés from a fixed Corpus and citing the Source it used. Source in this repository.
 - LinkedIn profile exists.
 
 Does not exist yet and **must not be fabricated** — these are Placeholder Assets with reserved slots:

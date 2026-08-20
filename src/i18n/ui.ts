@@ -96,7 +96,7 @@ export const copy = {
   'ask.seed1': { en: 'How is Dolphin different from a coding assistant?', es: '¿En qué se diferencia Dolphin de un asistente de código?' },
   'ask.seed2': { en: 'Why does Armin ship an MCP server?', es: '¿Por qué Armin incluye un servidor MCP?' },
   'ask.seed3': { en: 'Which of these can I run myself today?', es: '¿Cuál de estos puedo ejecutar yo hoy?' },
-  'ask.seed4': { en: 'What did Citadela get wrong first?', es: '¿Qué hizo mal Citadela al principio?' },
+  'ask.seed4': { en: 'What does Ask do when the Corpus has no answer?', es: '¿Qué hace Ask cuando el corpus no tiene respuesta?' },
 
   'portrait.label': { en: 'Portrait', es: 'Retrato' },
   'portrait.placeholder': { en: 'Portrait — to be added', es: 'Retrato — pendiente' },

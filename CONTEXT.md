@@ -45,7 +45,7 @@ A passage from the Corpus that the Agent retrieved and cites to support an answe
 _Avoid_: citation, reference, excerpt, snippet
 
 **Portfolio Project**
-One of the three shipped, publicly usable products the site presents: Dolphin, Armin, and Citadela. A candidate for inclusion must be something a stranger can run or use today, with readable public source. Shortened to "Project" in UI copy (nav, headings) where space is tight; the full term still governs prose.
+One of the three shipped, publicly usable products the site presents: Dolphin, Armin, and Ask. A candidate for inclusion must be something a stranger can run or use today, with readable public source. Shortened to "Project" in UI copy (nav, headings) where space is tight; the full term still governs prose.
 _Avoid_: work, portfolio piece, side project
 
 **Flagship**

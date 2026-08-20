@@ -14,9 +14,9 @@ const t = useTranslations(locale);
 const other: Locale = locale === 'en' ? 'es' : 'en';
 
 const nav = [
-  { href: localePath(locale, '/#projects'), label: t('nav.projects') },
-  { href: localePath(locale, '/#casts'), label: t('nav.casts') },
-  { href: localePath(locale, '/#about'), label: t('nav.about') },
+  { path: '/', href: localePath(locale, '/#projects'), label: t('nav.projects') },
+  { path: '/', href: localePath(locale, '/#casts'), label: t('nav.casts') },
+  { path: '/', href: localePath(locale, '/#about'), label: t('nav.about') },
 ];
 ---
 

@@ -28,3 +28,4 @@ dist
 
 # supabase CLI local state
 supabase/.temp/
+.env*

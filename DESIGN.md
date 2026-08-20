@@ -31,7 +31,7 @@ Tokens live as CSS custom properties on `:root` and map into Tailwind through `@
 | `--rule` | `#DAD1BB` | Hairline rules (hr, internal dividers) |
 | `--line-1` | `#F5B301` | Dolphin — also the claim highlight, text-selection, fallback notice |
 | `--line-2` | `#F4602A` | Armin |
-| `--line-3` | `#2FBFAE` | Citadela |
+| `--line-3` | `#2FBFAE` | Ask |
 
 Per-project colour is keyed by directory order in `lineToken(order)` (`src/lib/projects.ts`): `var(--line-((order-1) % 3)+1)`. It arrives on a block as `--row-color` and is spent on the title brick fill, the ticket/entry hover fill, and the colour chip. Project colour always sits under black ink.
 

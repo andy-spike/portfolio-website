@@ -15,12 +15,12 @@ each Case Study.
 Three Portfolio Projects, each with a case study in the shape
 Problem → Decisions (with Rejected Alternatives) → Result:
 
-- **Dolphin** (Flagship) — course generator; a TUI that orchestrates
-  coding agents as its central generation engine. ~21k lines of TypeScript.
+- **Dolphin** (Flagship) — course generator; a web app that generates complete
+  courses with a custom-built agent as its engine. ~21k lines of TypeScript.
 - **Armin** — local-first spaced-repetition desktop app using FSRS, shipping an
   MCP server with tests and an AppImage release.
-- **Citadela** — peer-to-peer tutoring marketplace for Bogotá universities
-  (Next.js, Convex, Better Auth, payments and scheduling).
+- **Ask** — the agent on this site that answers questions about Andrés from a
+  fixed corpus, citing the Source it used (Astro, Vercel AI SDK, pgvector).
 
 ## Stack
 

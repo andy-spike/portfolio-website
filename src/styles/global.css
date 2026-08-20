@@ -86,7 +86,7 @@
   /* One colour per project, always under black ink. */
   --line-1: #F5B301; /* Dolphin */
   --line-2: #F4602A; /* Armin */
-  --line-3: #2FBFAE; /* Citadela */
+  --line-3: #2FBFAE; /* Ask */
   color-scheme: light;
 
   /* The fascia's own height. Every anchor's scroll-margin derives from it. */

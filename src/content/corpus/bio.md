@@ -1,24 +1,17 @@
 # Bio
 
-<!--
-  The Corpus is the single source of truth the Agent answers from. Write it in
-  English; the Agent answers in the page's language. Every section below is a
-  chunk — the heading travels with it, so write the heading as the question a
-  reader would ask. A section left as a comment is skipped by the seed, so an
-  unfinished file is safe to commit.
-
-  Never state seniority, and never write a claim without a public artifact
-  behind it (PRODUCT.md, "Evidence on Hand").
--->
-
 ## Who Andrés is
 
-<!-- Name, where he is, what he builds. No years, no seniority. -->
+Andrés Sanabria builds web software in Bogotá, Colombia. He builds full-stack applications with AI agents working inside them. He works with remote English-speaking teams and with companies in Bogotá.
+
+He does not train models and he does not do machine-learning research. He integrates agents into products that people actually use.
 
 ## What an AI Product Engineer means here
 
-<!-- The claim the site makes: agent-native products, not machine learning. -->
+The role means building products where an AI agent does real work inside the application. It is not wrapping an API call in a button. The agent has a job: it reads data, makes decisions, and produces a result the product uses.
+
+It does not mean training models, tuning weights, or research. That work is out of scope. The projects show it: the agent is a working part of the product, never the product itself.
 
 ## How to reach him
 
-<!-- GitHub is the Primary Action; email and the Resume travel beside it. -->
+Andrés is on GitHub at github.com/andy-spike, where the project source lives. His email is ansanabria12@gmail.com. He answers email from hiring managers and replies to questions about his work.
