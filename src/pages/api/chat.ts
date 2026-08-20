@@ -2,10 +2,12 @@ import type { APIRoute } from 'astro';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import { createClient } from '@supabase/supabase-js';
 import {
+  createUIMessageStreamResponse,
   embed,
   jsonSchema,
   stepCountIs,
   streamText,
+  toUIMessageStream,
   tool,
   type ModelMessage,
 } from 'ai';
@@ -37,8 +39,8 @@ const MIN_SIMILARITY = 0.25;
 
 /**
  * The ceiling on one question. A step is a model call: each search costs one,
- * and the answer costs the last. Four leaves room to search twice — enough to
- * compare two Portfolio Projects — and stops a loop from spending the key.
+ * and the answer costs the last. Four leaves room to search twice, enough to
+ * compare two Portfolio Projects, and stops a loop from spending the key.
  */
 const MAX_STEPS = 4;
 
@@ -70,7 +72,7 @@ interface MatchedChunk {
  * The rules the Agent answers under.
  *
  * The Corpus is still the only ground, but the Agent now reaches it itself. It
- * has read the whole transcript, so it — and not a heuristic in this file —
+ * has read the whole transcript, so it, and not a heuristic in this file,
  * decides what "it" refers to and what to search for. The refusal has to stay
  * as easy to produce as the answer: an answer without a Source is a defect.
  */
@@ -79,13 +81,23 @@ function systemPrompt(locale: Locale): string {
 
 The Corpus is the only source of facts you have. Reach it with the searchCorpus tool.
 
-Search before you state anything about Andrés: who he is, what he built, how he built it, what he decided against, what he is looking for. You have read this conversation, so write a query that names its subject in full — when the reader asks "and how does it work?", search for the thing they mean, not for their words.
+Search before you state anything about Andrés: who he is, what he built, how he built it, what he decided against, what he is looking for. You have read this conversation, so write a query that names its subject in full. When the reader asks "and how does it work?", search for the thing they mean, not for their words.
 Search more than once when a question covers more than one subject. Compare two projects by searching for each of them.
-Do not search when the reader is not asking for a new fact — when they ask you to say something again more simply, or more briefly, or when they thank you. Answer from what you have already said.
+Do not search when the reader is not asking for a new fact, when they ask you to say something again more simply, or more briefly, or when they thank you. Answer from what you have already said.
 Answer only from passages a search returned in this reply, or from what you have already said in this conversation. Never guess, never fill a gap from general knowledge, and never state anything about seniority, years of experience, employers, clients, or numbers that is not written in a passage.
 When a search returns nothing, say plainly that the Corpus does not cover it and suggest what the reader could ask instead. Do not soften that into a partial answer.
 Name the passages you used in your prose where it reads naturally; the interface lists them separately, so do not append a citation list of your own.
-Write in ${LANGUAGES[locale]}, in plain sentences, short and direct. A few sentences is usually the whole answer.
+Write in ${LANGUAGES[locale]} the way the Corpus is written. Short sentences. One idea each. Plain words. Active voice. A few sentences is usually the whole answer.
+
+Never write like a large language model. Avoid these tells:
+- Filler and padding: "In order to", "It is important to note that", "delve", "showcase", "pivotal", "testament to", "underscore", "vibrant", "leverage", "utilize", "furthermore". State what happened, not what it "highlights" or "ensures".
+- The "not just X, but Y" frame, and the rule of three. State the point directly, in the natural number of parts.
+- Synonym cycling. Pick one word for a thing and repeat it.
+- Em dashes and mid-sentence colons. Use a period or a comma.
+- Chatbot filler: "Great question", "I hope this helps", "To sum up". Answer directly.
+- Hedging: "might possibly", "could be argued". Be definite when the Corpus is definite.
+- Metaphor nouns: "harness", "surface", "flywheel", "north star". Use the concrete word.
+If a sentence could appear unchanged in any other person's portfolio, it says nothing about Andrés. Cut it, or say what the passages state. Never add a fact the passages do not state.
 Write prose and nothing else. The surface prints your reply as plain text, so asterisks, bullet lists and headings arrive on the page as the characters you typed. Separate paragraphs with a blank line; that is the only formatting you have.`;
 }
 
@@ -150,7 +162,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   // Everything before the first token: missing configuration, or a store that
-  // is down. They are one failure to the reader — the Agent cannot answer —
+  // is down. They are one failure to the reader, the Agent cannot answer.
   // and none of them should reach it as a stack trace. The rate limit runs
   // here so a refused request costs no model call at all.
   let openrouter: ReturnType<typeof createOpenRouter>;
@@ -171,7 +183,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     if (allowed.data === false) return bad('rate_limited', 'Too many questions', 429);
   } catch (cause) {
     const detail = cause instanceof Error ? cause.message : String(cause);
-    console.error('Ask: the Agent could not be reached —', scrub(detail));
+    console.error('Ask: the Agent could not be reached -', scrub(detail));
     return bad('unavailable', 'The Agent is unavailable', 503);
   }
 
@@ -182,7 +194,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   // needed no Source, and the transcript says so.
   const searchCorpus = tool({
     description:
-      "Search the Corpus — the facts about Andrés Sanabria — and return the passages that match. Write the query as a standalone question or phrase that names its subject, not as the reader's own words. Call it again with a different query to cover a second subject.",
+      "Search the Corpus, the facts about Andrés Sanabria, and return the passages that match. Write the query as a standalone question or phrase that names its subject, not as the reader's own words. Call it again with a different query to cover a second subject.",
     inputSchema: jsonSchema<{ query: string }>({
       type: 'object',
       properties: {
@@ -216,12 +228,12 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         );
 
         // The passages travel to the reader as well as to the Agent: they are
-        // what the transcript lists as Sources. The similarity does not — it
+        // what the transcript lists as Sources. The similarity does not, it
         // is how a passage was chosen, not what it says.
         return passages.map(({ file, title, content }) => ({ file, title, content }));
       } catch (cause) {
         const detail = cause instanceof Error ? cause.message : String(cause);
-        console.error('Ask: the Corpus could not be searched —', scrub(detail));
+        console.error('Ask: the Corpus could not be searched -', scrub(detail));
         throw cause;
       }
     },
@@ -246,13 +258,16 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   //
   // The reasoning tokens are never sent: the reader is owed the answer and the
   // Sources, not the working.
-  return result.toUIMessageStreamResponse({
-    sendReasoning: false,
+  return createUIMessageStreamResponse({
+    stream: toUIMessageStream({
+      stream: result.stream,
+      sendReasoning: false,
+      onError: (cause) => {
+        const detail = cause instanceof Error ? cause.message : String(cause);
+        console.error('Ask: the reply failed mid-stream -', scrub(detail));
+        return 'The Agent is unavailable';
+      },
+    }),
     headers: { 'cache-control': 'no-store' },
-    onError: (cause) => {
-      const detail = cause instanceof Error ? cause.message : String(cause);
-      console.error('Ask: the reply failed mid-stream —', scrub(detail));
-      return 'The Agent is unavailable';
-    },
   });
 };

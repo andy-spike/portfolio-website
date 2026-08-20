@@ -154,7 +154,7 @@ export function Chat({
         <div className="ml-auto flex items-center gap-2">
           <a
             href={altLocaleHref}
-            className="plate h-[var(--bar-h)] px-4 no-underline transition-colors duration-100 hover:bg-ink hover:text-paper focus-visible:outline-offset-0"
+            className="chip px-4"
           >
             {altLocaleLabel}
           </a>

@@ -22,12 +22,12 @@ const projects = defineCollection({
     state: z.string(),
     stack: z.array(z.string()),
     links: z.object({
-      source: z.string().url(),
-      live: z.string().url().optional(),
-      download: z.string().url().optional(),
+      source: z.url(),
+      live: z.url().optional(),
+      download: z.url().optional(),
     }),
     /** YouTube URL for this project's Cast. Unset renders the reserved plate. */
-    cast: z.string().url().optional(),
+    cast: z.url().optional(),
     draft: z.boolean().default(false),
   }),
 });
