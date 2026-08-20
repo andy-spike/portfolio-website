@@ -32,3 +32,4 @@ test('a hash inside a fenced block does not start a chunk', () => {
   assert.equal(chunks.length, 1);
   assert.match(chunks[0].content, /# install it/);
 });
+

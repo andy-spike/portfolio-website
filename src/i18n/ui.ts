@@ -71,6 +71,7 @@ export const copy = {
   'ask.send': { en: 'Ask', es: 'Preguntar' },
   'ask.error': { en: 'Type a question first', es: 'Escribe una pregunta primero' },
   'ask.sources': { en: 'Sources', es: 'Fuentes' },
+  'ask.sourcesInherited': { en: 'Sources carried forward', es: 'Fuentes anteriores' },
   'ask.noSources': {
     en: 'No Source in the Corpus supported this answer',
     es: 'Ninguna fuente del corpus sustenta esta respuesta',
@@ -90,6 +91,10 @@ export const copy = {
   'ask.you': { en: 'You', es: 'Tú' },
   'ask.agent': { en: 'Agent', es: 'Agente' },
   'ask.thinking': { en: 'Thinking', es: 'Pensando' },
+  // Printed while the Agent is searching, with the query it wrote for itself
+  // set after it. It has to stand alone as well: there is a moment where the
+  // Agent is searching and has not yet written what for.
+  'ask.searching': { en: 'Searching the Corpus', es: 'Buscando en el Corpus' },
   'ask.emptyHeading': { en: 'Ask about my work.', es: 'Pregunta sobre mi trabajo.' },
   'ask.hint': { en: 'Enter to send · Shift + Enter for a new line', es: 'Enter para enviar · Shift + Enter para una línea nueva' },
   'ask.seedHeading': { en: 'Start with a question', es: 'Empieza con una pregunta' },

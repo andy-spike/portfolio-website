@@ -1,6 +1,6 @@
 # The Agent runs on OpenRouter with client-carried history
 
-The Agent's model runs through OpenRouter (DeepSeek V4 Flash), with reasoning enabled at low effort and reasoning tokens never surfaced. Each request carries the full session transcript from the client; the server stays stateless and re-embeds only the latest question for retrieval. The Corpus is embedded once, ahead of request time, with `text-embedding-3-small` (1536 dims).
+The Agent's model runs through OpenRouter (DeepSeek V4 Flash), with reasoning enabled at low effort and reasoning tokens never surfaced. Each request carries the full session transcript from the client; the server stays stateless and embeds the reader's recent questions for retrieval (see 0004). The Corpus is embedded once, ahead of request time, with `text-embedding-3-small` (1536 dims).
 
 ## Considered Options
 

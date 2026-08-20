@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, SquarePen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Composer } from './Composer';
 import { Conversation } from './Conversation';
 import { Message } from './Message';
-import { frames } from '@/lib/ask-stream';
-import type { ChatStrings, Source, Turn } from './types';
+import { STORE_KEY, settled, textOf } from './transcript';
+import type { AskMessage, ChatStrings } from './types';
 
 interface Props {
   strings: ChatStrings;
@@ -26,10 +28,10 @@ interface Props {
  * itself, and a composer pinned under it — because that is the shape a reader
  * already knows how to use, and the surface's whole job is to be used.
  *
- * The session's transcript is the only place it lives: the server is stateless,
- * so every request carries the whole thing back and the Agent's memory ends
- * when the reader closes the tab. New chat is therefore a real reset, and there
- * is nothing to clean up behind it.
+ * The stream, the status and the transcript are the SDK's, so this file holds
+ * none of that. What it does hold is the two things the SDK has no opinion
+ * about: the request the route already validates, and the reader's own copy of
+ * the session. The server keeps nothing, so New chat is a real deletion.
  */
 export function Chat({
   strings,
@@ -39,98 +41,90 @@ export function Chat({
   altLocaleLabel,
   toBottomLabel,
 }: Props) {
-  const [turns, setTurns] = useState<Turn[]>([]);
-  const [busy, setBusy] = useState(false);
-  const nextId = useRef(0);
-  const inflight = useRef<AbortController | undefined>(undefined);
-
-  useEffect(() => () => inflight.current?.abort(), []);
-
-  const send = useCallback(
-    async (question: string) => {
-      const answerId = `a${nextId.current++}`;
-
-      // The transcript the server is given: everything that landed, plus the
-      // question. A turn that failed is left out — it is not a thing the Agent
-      // said, and replaying it would teach it to say more of the same.
-      const messages = [
-        ...turns
-          .filter((turn) => turn.status !== 'error' && turn.text)
-          .map(({ role, text }) => ({ role, text })),
-        { role: 'user' as const, text: question },
-      ];
-
-      setTurns((prev) => [
-        ...prev,
-        { id: `q${nextId.current++}`, role: 'user', text: question },
-        { id: answerId, role: 'assistant', text: '', status: 'pending' },
-      ]);
-      setBusy(true);
-
-      // Writing by id rather than position: the reader may have reset the
-      // transcript while this was in the air, and then there is nothing to
-      // write to and this is correctly a no-op.
-      const write = (patch: Partial<Turn>) =>
-        setTurns((prev) =>
-          prev.map((turn) => (turn.id === answerId ? { ...turn, ...patch } : turn))
-        );
-
-      const controller = new AbortController();
-      inflight.current?.abort();
-      inflight.current = controller;
-
-      try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ locale, messages }),
-          signal: controller.signal,
-        });
-
-        if (!response.ok || !response.body) {
-          write({
-            status: 'error',
-            text: response.status === 429 ? strings.rateLimited : strings.failed,
-          });
-          return;
-        }
-
-        let text = '';
-        for await (const { event, data } of frames(response.body)) {
-          if (event === 'sources') write({ sources: data as Source[] });
-          if (event === 'delta') {
-            text += data as string;
-            write({ text, status: undefined });
-          }
-          // The Agent gave up mid-answer. Nothing after this frame is an
-          // answer, and half an answer is not one either.
-          if (event === 'error') {
-            write({ status: 'error', text: strings.failed });
-            return;
-          }
-        }
-
-        // A stream that ended without a word is a failure that never announced
-        // itself. Say so rather than leaving an empty block on the surface.
-        if (!text) write({ status: 'error', text: strings.failed });
-      } catch {
-        if (!controller.signal.aborted) {
-          write({ status: 'error', text: strings.failed });
-        }
-      } finally {
-        if (!controller.signal.aborted) setBusy(false);
-      }
-    },
-    [locale, turns, strings.failed, strings.rateLimited]
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport<AskMessage>({
+        api: '/api/chat',
+        // The route's contract is `{ locale, messages: [{ role, text }] }` and
+        // stays that way. Sending whole messages back would carry the Agent's
+        // own tool results up with them, and a transcript the client can edit
+        // is not a record of what the Corpus said.
+        prepareSendMessagesRequest: ({ messages }) => ({
+          body: {
+            locale,
+            messages: messages.map((message) => ({
+              role: message.role,
+              text: textOf(message),
+            })),
+          },
+        }),
+      }),
+    [locale]
   );
 
-  const reset = () => {
-    inflight.current?.abort();
-    setTurns([]);
-    setBusy(false);
+  const { messages, setMessages, sendMessage, stop, status, error, clearError } =
+    useChat<AskMessage>({ transport });
+
+  const busy = status === 'submitted' || status === 'streaming';
+  const [restored, setRestored] = useState(false);
+
+  // Restored after mount, never during render: the island is server-rendered
+  // empty, and reading storage in render would hand React different markup
+  // than the page it is hydrating.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORE_KEY);
+      const parsed: unknown = saved ? JSON.parse(saved) : null;
+      if (Array.isArray(parsed)) setMessages(settled(parsed as AskMessage[]));
+    } catch {
+      // Storage the browser will not give us, or a shape from an older
+      // version of this surface. It costs the reader their last session,
+      // never this one.
+    }
+    setRestored(true);
+  }, [setMessages]);
+
+  // Written when the surface is at rest, not on every token: a reply lands as
+  // dozens of updates and a whole transcript re-serialised on each of them is
+  // work nobody asked for. Nothing is written before the restore has run, so
+  // an empty first pass cannot erase the last session; New chat clears it.
+  useEffect(() => {
+    if (busy || !restored) return;
+    const keep = settled(messages);
+    if (keep.length === 0) return;
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(keep));
+    } catch {
+      // A full or unavailable store. The session still works; it just stops
+      // outliving the tab.
+    }
+  }, [messages, busy, restored]);
+
+  const ask = (question: string) => {
+    clearError();
+    void sendMessage({ text: question });
   };
 
-  const empty = turns.length === 0;
+  const reset = () => {
+    stop();
+    clearError();
+    setMessages([]);
+    try {
+      localStorage.removeItem(STORE_KEY);
+    } catch {}
+  };
+
+  const empty = messages.length === 0;
+
+  // Until the reply starts arriving there is no reply to render, and the
+  // reader would watch their own question sit there alone for as long as the
+  // Agent takes to decide what to search for. An empty block stands in for it
+  // so the surface is never silent about working. It is never stored: it is
+  // not a thing the Agent said.
+  const shown: AskMessage[] =
+    status === 'submitted' && messages.at(-1)?.role === 'user'
+      ? [...messages, { id: 'awaiting', role: 'assistant', parts: [] }]
+      : messages;
 
   return (
     <div className="flex h-[100dvh] flex-col bg-ground">
@@ -179,7 +173,7 @@ export function Chat({
         </div>
       </header>
 
-      <Conversation revision={turns.length + (busy ? 0 : 1)} scrollLabel={toBottomLabel}>
+      <Conversation revision={messages.length + (busy ? 0 : 1)} scrollLabel={toBottomLabel}>
         <div
           className={cn(
             'mx-auto w-full max-w-4xl px-[clamp(1rem,3vw,1.75rem)] py-[clamp(1.5rem,4vw,2.5rem)]',
@@ -187,11 +181,24 @@ export function Chat({
           )}
         >
           {empty ? (
-            <Empty strings={strings} onPick={send} />
+            <Empty strings={strings} onPick={ask} />
           ) : (
             <div className="flex flex-col gap-[clamp(1.5rem,3.5vw,2.25rem)]">
-              {turns.map((turn) => (
-                <Message key={turn.id} turn={turn} strings={strings} />
+              {shown.map((message, index) => (
+                <Message
+                  key={message.id}
+                  messages={shown}
+                  index={index}
+                  strings={strings}
+                  // The Agent is still working on the last reply only, and a
+                  // request that failed is not a reply the reader can read.
+                  busy={busy && index === shown.length - 1}
+                  failed={
+                    error !== undefined &&
+                    index === shown.length - 1 &&
+                    message.role === 'assistant'
+                  }
+                />
               ))}
             </div>
           )}
@@ -200,11 +207,36 @@ export function Chat({
 
       <div className="shrink-0 border-t-[3px] border-ink bg-paper px-[clamp(1rem,3vw,1.75rem)] pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
         <div className="mx-auto w-full max-w-4xl">
-          <Composer strings={strings} busy={busy} onSend={send} />
+          {/*
+            A request that never became a reply leaves no block in the
+            transcript to carry the news, so the composer carries it instead.
+          */}
+          {error && (
+            <p className="mb-3">
+              <span className="plate plate-solid">
+                {rateLimited(error) ? strings.rateLimited : strings.failed}
+              </span>
+            </p>
+          )}
+          <Composer strings={strings} busy={busy} onSend={ask} />
         </div>
       </div>
     </div>
   );
+}
+
+/**
+ * Whether the reader was turned away for asking too fast, rather than for
+ * anything being broken — the two need different words. The SDK hands the whole
+ * response body over as the error's message, and the route puts a stable code
+ * in it so this does not become a test against English prose.
+ */
+function rateLimited(error: Error): boolean {
+  try {
+    return (JSON.parse(error.message) as { code?: string }).code === 'rate_limited';
+  } catch {
+    return false;
+  }
 }
 
 /**
