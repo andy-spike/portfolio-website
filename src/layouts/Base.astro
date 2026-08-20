@@ -12,6 +12,8 @@ import {
 import { CONTACT } from "../lib/contact";
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
+import bricolageLatin from "@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-standard-normal.woff2";
+import azeretLatin from "@fontsource-variable/azeret-mono/files/azeret-mono-latin-wght-normal.woff2";
 
 interface Props {
   locale: Locale;
@@ -43,6 +45,8 @@ const otherLocale: Locale = locale === "en" ? "es" : "en";
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href={bricolageLatin} />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href={azeretLatin} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <title>{pageTitle}</title>
